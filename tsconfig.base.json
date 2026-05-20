@@ -1,0 +1,14 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve",
+    "skipLibCheck": true,
+    "paths": {
+      "@icons": ["./apps/sk-106/public/assets/icons/index.ts"],
+      "@images": ["./apps/sk-106/public/assets/images/index.ts"]
+    }
+  }
+}
