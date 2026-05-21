@@ -3,7 +3,13 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 @Component({
   selector: 'app-button',
   template: `
-    <button type="button" class="app-button" [disabled]="disabled()" (click)="pressed.emit()">
+    <button
+      type="button"
+      class="app-button"
+      [class.linear]="isLinear()"
+      [disabled]="disabled()"
+      (click)="pressed.emit()"
+    >
       {{ label() }}
     </button>
   `,
@@ -30,27 +36,17 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
         font-weight: 600;
         line-height: 1.5;
         cursor: pointer;
-        transition: filter 120ms ease, transform 120ms ease;
+        transition:
+          filter 120ms ease,
+          transform 120ms ease;
       }
 
-      .app-button:hover {
-        filter: brightness(1.03);
-      }
-
-      .app-button:active {
-        transform: translateY(1px);
-      }
-
-      .app-button:focus-visible {
-        outline: 2px solid var(--color-text-inverse, #ffffff);
-        outline-offset: 2px;
-      }
-
-      .app-button:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
-        filter: none;
+      .app-button.linear {
+        color: var(--color-text-default, #262626);
+        font-weight: 400;
+        border-radius: 999px;
+        font-size: var(--font-size-12);
+        background: var(--gradient-button, linear-gradient(246deg, #F6FFE5 15.23%, #B6E99C 46.88%, #91D9BA 84.77%));
       }
     `,
   ],
@@ -59,6 +55,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 export class ButtonComponent {
   label = input.required<string>();
   disabled = input(false);
+  isLinear = input(false);
 
   readonly pressed = output<void>();
 }
