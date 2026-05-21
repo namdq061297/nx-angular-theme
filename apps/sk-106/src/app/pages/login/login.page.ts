@@ -6,13 +6,14 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { ImageComponent } from '../../shared/components/image/image.component';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-login-page',
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ButtonComponent, IconComponent, ImageComponent, TextInputComponent],
+  imports: [ButtonComponent, IconComponent, ImageComponent, TextInputComponent, FooterComponent],
 })
 export class LoginPage {
   private readonly authState = inject(AuthStateService);
