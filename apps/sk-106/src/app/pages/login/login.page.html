@@ -11,15 +11,15 @@
         <app-icon name="ic_back" [size]="24" alt=""></app-icon>
       </button>
 
-      <h1>Đăng nhập hệ thống</h1>
+      <h1 class="title_large">Đăng nhập hệ thống</h1>
       <span class="header-spacer" aria-hidden="true"></span>
     </header>
 
     <section class="login-note" aria-label="Thông báo đăng nhập">
-      <p>
+      <p class="body_small_regular">
         Quý khách vui lòng nhập các thông tin dưới đây để thực hiện đăng ký trực tuyến sản phẩm dịch vụ tại
         Vietcombank. Trường hợp Quý khách đã có yêu cầu, vui lòng tra cứu thông tin
-        <a href="#">tại đây</a>
+        <a class="body_small_semibold" href="#">tại đây</a>
       </p>
     </section>
 
@@ -46,9 +46,9 @@
       <app-button label="Đăng nhập" [disabled]="!canSubmit()" (pressed)="onLogin()"></app-button>
     </form>
 
-    <p class="register-copy">
+    <p class="register-copy body_small_medium">
       Chưa có thông tin đăng nhập?
-      <a href="#">Đăng ký</a>
+      <a class="body_small_semibold" href="#">Đăng ký</a>
     </p>
   </section>
 </main>
