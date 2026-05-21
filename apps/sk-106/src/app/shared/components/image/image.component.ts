@@ -9,10 +9,12 @@ import { IMAGES, type ImageName } from '@images';
   styles: [
     `
       :host {
-        display: inline-flex;
+        display: block;
       }
       .app-image {
         display: block;
+        width: 100%;
+        height: 100%;
         object-fit: cover;
         max-width: 100%;
       }
