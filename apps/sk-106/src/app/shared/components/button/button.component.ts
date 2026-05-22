@@ -7,6 +7,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
       type="button"
       class="app-button"
       [class.linear]="isLinear()"
+      [class.disabled]="disabled()"
       [disabled]="disabled()"
       (click)="pressed.emit()"
     >
@@ -47,6 +48,17 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
         border-radius: 999px;
         font-size: var(--font-size-12);
         background: var(--gradient-button, linear-gradient(246deg, #F6FFE5 15.23%, #B6E99C 46.88%, #91D9BA 84.77%));
+      }
+
+      .app-button:not(:disabled):hover {
+        background: var(--Gradient-Hover, linear-gradient(90deg, var(--Gradient-bg-solid-leading_hover, #99C82A) 0%, var(--Gradient-bg-solid-trailing_hover, #2A9566) 100%));
+      }
+
+      .app-button:disabled {
+        color: var(--color-fg-disable, #717680);
+        background: var(--color-bg-disable, #F5F5F5);
+        cursor: not-allowed;
+        font-weight: 500;
       }
     `,
   ],

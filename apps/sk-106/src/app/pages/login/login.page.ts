@@ -24,18 +24,18 @@ export class LoginPage {
   protected readonly submitAttempted = signal(false);
   protected readonly documentId = signal('');
   protected readonly phoneNumber = signal('');
-  protected readonly isSubmitDisabled = computed(() => {
+  // protected readonly isSubmitDisabled = computed(() => {
+  //   const documentId = this.documentId().trim();
+  //   const phoneNumber = this.phoneNumber().trim();
+
+  //   return documentId.length === 0 && isValidPhoneNumber(phoneNumber);
+  // });
+
+   readonly canLogin = computed(() => {
     const documentId = this.documentId().trim();
     const phoneNumber = this.phoneNumber().trim();
 
-    return documentId.length === 0 && phoneNumber.length === 0;
-  });
-
-  private readonly canLogin = computed(() => {
-    const documentId = this.documentId().trim();
-    const phoneNumber = this.phoneNumber().trim();
-
-    return documentId.length > 0 && isValidPhoneNumber(phoneNumber);
+    return documentId.length > 0 && phoneNumber.length > 0 ;
   });
 
   protected goBack(): void {
