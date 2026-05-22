@@ -8,6 +8,7 @@ import { ImageComponent } from '../../shared/components/image/image.component';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { PHONE_PATTERN_SOURCE, isValidPhoneNumber } from '../../shared/validation/phone.validation';
+import { LOGIN_VALIDATION_MESSAGES } from '../../shared/validation/validation-messages';
 
 @Component({
   selector: 'app-login-page',
@@ -21,6 +22,7 @@ export class LoginPage {
   private readonly location = inject(Location);
   private readonly router = inject(Router);
   protected readonly phonePattern = PHONE_PATTERN_SOURCE;
+  protected readonly validationMessages = LOGIN_VALIDATION_MESSAGES;
   protected readonly submitAttempted = signal(false);
   protected readonly documentId = signal('');
   protected readonly phoneNumber = signal('');

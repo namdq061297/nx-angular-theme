@@ -15,7 +15,7 @@ let nextInputId = 0;
 
       <input
         class="text-input__control"
-        [class.text-input__control--invalid]="showInvalid()"
+        [class.text-input__control--invalid]="showError()"
         [id]="resolvedId()"
         [type]="type()"
         [value]="value()"
@@ -26,11 +26,18 @@ let nextInputId = 0;
         [disabled]="disabled()"
         [required]="required()"
         [attr.aria-required]="required()"
-        [attr.aria-invalid]="showInvalid() ? 'true' : null"
+        [attr.aria-invalid]="showError() ? 'true' : null"
+        [attr.aria-describedby]="showError() ? resolvedId() + '-error' : null"
         (input)="onInput($event)"
         (focus)="onFocus()"
         (blur)="onBlur($event)"
       />
+
+      @if (showError()) {
+        <span class="text-input__error" [id]="resolvedId() + '-error'" role="alert">
+          {{ errorMessage() }}
+        </span>
+      }
     </label>
   `,
   styles: [
@@ -56,6 +63,13 @@ let nextInputId = 0;
 
       .text-input__required {
         color: var(--color-text-error, #d92d20);
+      }
+
+      .text-input__error {
+        color: var(--color-text-error, #d92d20);
+        font-family: var(--font-family-base, sans-serif);
+        font-size: var(--font-size-12, 0.75rem);
+        font-weight: 500;
       }
 
       .text-input__control {
@@ -115,12 +129,36 @@ let nextInputId = 0;
 export class TextInputComponent {
   private readonly generatedId = `app-text-input-${nextInputId++}`;
   private readonly hasFocus = signal(false);
-  private readonly hasFormatError = signal(false);
-  protected readonly showInvalid = computed(() => {
-    const hasValue = this.value().trim().length > 0;
-    return this.submitted() && hasValue && this.hasFormatError() && !this.hasFocus() && !this.disabled();
-  });
+
+  private readonly normalizedValue = computed(() => this.value().trim());
   protected readonly resolvedPattern = computed(() => this.pattern() ?? (this.inputmode() === 'numeric' ? '[0-9]*' : undefined));
+  private readonly hasRequiredError = computed(() => this.required() && this.normalizedValue().length === 0);
+  private readonly hasPatternError = computed(() => {
+    const value = this.normalizedValue();
+    const pattern = this.resolvedPattern();
+
+    if (!pattern || value.length === 0) {
+      return false;
+    }
+
+    try {
+      return !new RegExp(pattern).test(value);
+    } catch {
+      return false;
+    }
+  });
+
+  protected readonly showError = computed(() => {
+    return this.submitted() && !this.hasFocus() && !this.disabled() && (this.hasRequiredError() || this.hasPatternError());
+  });
+
+  protected readonly errorMessage = computed(() => {
+    if (this.hasRequiredError()) {
+      return this.requiredErrorMessage();
+    }
+
+    return this.patternErrorMessage();
+  });
 
   label = input.required<string>();
   type = input('text');
@@ -129,6 +167,8 @@ export class TextInputComponent {
   autocomplete = input<string | undefined>(undefined);
   inputmode = input<string | undefined>(undefined);
   pattern = input<string | undefined>(undefined);
+  requiredErrorMessage = input('Trường này là bắt buộc');
+  patternErrorMessage = input('Giá trị không đúng định dạng');
   submitted = input(false);
   disabled = input(false);
   required = input(false);
@@ -140,7 +180,6 @@ export class TextInputComponent {
 
   protected onInput(event: Event): void {
     const element = event.target as HTMLInputElement;
-    this.updateInvalidState(element);
     this.valueChange.emit(element.value);
   }
 
@@ -149,23 +188,6 @@ export class TextInputComponent {
   }
 
   protected onBlur(event: Event): void {
-    const element = event.target as HTMLInputElement;
     this.hasFocus.set(false);
-    this.updateInvalidState(element);
-  }
-
-  private updateInvalidState(element: HTMLInputElement): void {
-    const validity = element.validity;
-    const hasFormatError =
-      validity.typeMismatch ||
-      validity.patternMismatch ||
-      validity.tooShort ||
-      validity.tooLong ||
-      validity.rangeUnderflow ||
-      validity.rangeOverflow ||
-      validity.stepMismatch ||
-      validity.badInput;
-
-    this.hasFormatError.set(hasFormatError);
   }
 }
