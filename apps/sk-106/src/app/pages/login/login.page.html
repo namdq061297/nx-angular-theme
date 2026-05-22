@@ -1,7 +1,4 @@
 <main class="page">
-   <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
   <app-image
     name="login_bg"
     alt="Login Background"
@@ -32,6 +29,7 @@
         placeholder="Nhập số giấy tờ tùy thân"
         autocomplete="off"
         [required]="true"
+        [submitted]="submitAttempted()"
         [value]="documentId()"
         (valueChange)="onDocumentIdChange($event)"
       ></app-text-input>
@@ -41,12 +39,14 @@
         placeholder="Nhập số điện thoại"
         autocomplete="tel"
         inputmode="numeric"
+        [pattern]="phonePattern"
         [required]="true"
+        [submitted]="submitAttempted()"
         [value]="phoneNumber()"
         (valueChange)="onPhoneNumberChange($event)"
       ></app-text-input>
 
-      <app-button label="Đăng nhập" [disabled]="!canSubmit()" (pressed)="onLogin()"></app-button>
+      <app-button label="Đăng nhập" [disabled]="isSubmitDisabled()" (pressed)="onLogin()"></app-button>
     </form>
 
     <p class="register-copy body_small_medium">

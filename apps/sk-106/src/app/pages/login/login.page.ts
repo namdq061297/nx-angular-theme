@@ -7,6 +7,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
 import { ImageComponent } from '../../shared/components/image/image.component';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { PHONE_PATTERN_SOURCE, isValidPhoneNumber } from '../../shared/validation/phone.validation';
 
 @Component({
   selector: 'app-login-page',
@@ -19,10 +20,22 @@ export class LoginPage {
   private readonly authState = inject(AuthStateService);
   private readonly location = inject(Location);
   private readonly router = inject(Router);
+  protected readonly phonePattern = PHONE_PATTERN_SOURCE;
+  protected readonly submitAttempted = signal(false);
   protected readonly documentId = signal('');
   protected readonly phoneNumber = signal('');
-  protected readonly canSubmit = computed(() => {
-    return this.documentId().trim().length > 0 && this.phoneNumber().trim().length > 0;
+  protected readonly isSubmitDisabled = computed(() => {
+    const documentId = this.documentId().trim();
+    const phoneNumber = this.phoneNumber().trim();
+
+    return documentId.length === 0 && phoneNumber.length === 0;
+  });
+
+  private readonly canLogin = computed(() => {
+    const documentId = this.documentId().trim();
+    const phoneNumber = this.phoneNumber().trim();
+
+    return documentId.length > 0 && isValidPhoneNumber(phoneNumber);
   });
 
   protected goBack(): void {
@@ -30,12 +43,15 @@ export class LoginPage {
   }
 
   protected onLogin(): void {
-    if (!this.canSubmit()) {
+    this.submitAttempted.set(true);
+    
+    if (!this.canLogin()) {
       return;
     }
-
-    this.authState.login();
-    this.router.navigateByUrl('/home');
+    console.log('Document ID:', this.documentId());
+    console.log('Phone Number:', this.phoneNumber());
+    // this.authState.login();
+    // this.router.navigateByUrl('/home');
   }
 
   protected onDocumentIdChange(value: string): void {

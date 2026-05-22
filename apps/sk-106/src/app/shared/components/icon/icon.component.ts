@@ -4,7 +4,13 @@ import { ICONS, type IconName } from '@icons';
 @Component({
   selector: 'app-icon',
   template: `
-    <img [src]="src()" [alt]="alt()" [width]="size()" [height]="size()" class="app-icon" />
+    <img
+      [src]="src()"
+      [alt]="alt()"
+      [style.width.px]="size()"
+      [style.height.px]="size()"
+      class="app-icon"
+    />
   `,
   styles: [
     `

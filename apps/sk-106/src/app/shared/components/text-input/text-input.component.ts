@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 
 let nextInputId = 0;
 
@@ -15,16 +15,21 @@ let nextInputId = 0;
 
       <input
         class="text-input__control"
+        [class.text-input__control--invalid]="showInvalid()"
         [id]="resolvedId()"
         [type]="type()"
         [value]="value()"
         [placeholder]="placeholder()"
         [attr.autocomplete]="autocomplete()"
         [attr.inputmode]="inputmode()"
+        [attr.pattern]="resolvedPattern()"
         [disabled]="disabled()"
         [required]="required()"
         [attr.aria-required]="required()"
+        [attr.aria-invalid]="showInvalid() ? 'true' : null"
         (input)="onInput($event)"
+        (focus)="onFocus()"
+        (blur)="onBlur($event)"
       />
     </label>
   `,
@@ -81,13 +86,27 @@ let nextInputId = 0;
       }
 
       .text-input__control:focus-visible {
-        outline: 2px solid var(--color-border-brand-primary-subtle, #55aa84);
-        outline-offset: 2px;
+        outline: 2px solid var(--color-border-brand-primary, #006B3B);
+        // outline-offset: 2px;
+      }
+
+      .text-input__control.text-input__control--invalid:focus-visible {
+        outline: 2px solid var(--color-border-error-subtle, #fda29b);
       }
 
       .text-input__control:disabled {
         cursor: not-allowed;
-        opacity: 0.7;
+        background: var(--color-bg-disable, #f5f5f5);
+        border-color: var(--color-border-disable, #d5d7da);  
+      }
+
+      .text-input__control:invalid:not(.text-input__control--invalid):not(:disabled) {
+        border-color: var(--color-border-primary-brand, #d5d7da);
+        box-shadow: none;
+      }
+
+      .text-input__control.text-input__control--invalid:not(:disabled) {
+        border-color: var(--color-border-error-subtle, #fda29b);
       }
     `,
   ],
@@ -95,6 +114,13 @@ let nextInputId = 0;
 })
 export class TextInputComponent {
   private readonly generatedId = `app-text-input-${nextInputId++}`;
+  private readonly hasFocus = signal(false);
+  private readonly hasFormatError = signal(false);
+  protected readonly showInvalid = computed(() => {
+    const hasValue = this.value().trim().length > 0;
+    return this.submitted() && hasValue && this.hasFormatError() && !this.hasFocus() && !this.disabled();
+  });
+  protected readonly resolvedPattern = computed(() => this.pattern() ?? (this.inputmode() === 'numeric' ? '[0-9]*' : undefined));
 
   label = input.required<string>();
   type = input('text');
@@ -102,6 +128,8 @@ export class TextInputComponent {
   placeholder = input('');
   autocomplete = input<string | undefined>(undefined);
   inputmode = input<string | undefined>(undefined);
+  pattern = input<string | undefined>(undefined);
+  submitted = input(false);
   disabled = input(false);
   required = input(false);
   inputId = input<string | undefined>(undefined);
@@ -112,6 +140,32 @@ export class TextInputComponent {
 
   protected onInput(event: Event): void {
     const element = event.target as HTMLInputElement;
+    this.updateInvalidState(element);
     this.valueChange.emit(element.value);
+  }
+
+  protected onFocus(): void {
+    this.hasFocus.set(true);
+  }
+
+  protected onBlur(event: Event): void {
+    const element = event.target as HTMLInputElement;
+    this.hasFocus.set(false);
+    this.updateInvalidState(element);
+  }
+
+  private updateInvalidState(element: HTMLInputElement): void {
+    const validity = element.validity;
+    const hasFormatError =
+      validity.typeMismatch ||
+      validity.patternMismatch ||
+      validity.tooShort ||
+      validity.tooLong ||
+      validity.rangeUnderflow ||
+      validity.rangeOverflow ||
+      validity.stepMismatch ||
+      validity.badInput;
+
+    this.hasFormatError.set(hasFormatError);
   }
 }
