@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-button',
@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
       type="button"
       class="app-button"
       [class.linear]="isLinear()"
-      [class.disabled]="disabled()"
+      [class.secondary]="resolvedType() === 'secondary'"
       [disabled]="disabled()"
       (click)="pressed.emit()"
     >
@@ -50,7 +50,13 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
         background: var(--gradient-button, linear-gradient(246deg, #F6FFE5 15.23%, #B6E99C 46.88%, #91D9BA 84.77%));
       }
 
-      .app-button:not(:disabled):hover {
+      .app-button.secondary {
+        border: 1px solid var(--color-border-brand-primary, #006B3B);
+        background: var(--color-bg-surface-primary, #ffffff);
+        color: var(--color-text-brand-primary, #006b3b);
+      }
+
+      .app-button:not(.secondary):not(:disabled):hover {
         background: var(--Gradient-Hover, linear-gradient(90deg, var(--Gradient-bg-solid-leading_hover, #99C82A) 0%, var(--Gradient-bg-solid-trailing_hover, #2A9566) 100%));
       }
 
@@ -60,14 +66,24 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
         cursor: not-allowed;
         font-weight: 500;
       }
+
+      .app-button.secondary:disabled {
+        border: 1px solid var(--color-border-primary-bold, #A4A7AE);
+        background: var(--color-bg-surface-primary, #ffffff);
+        color: var(--color-text-disable, #717680);
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
   label = input.required<string>();
+  type = input<'primary' | 'secondary'>('primary');
+  variant = input<'primary' | 'secondary' | undefined>(undefined);
   disabled = input(false);
   isLinear = input(false);
+
+  protected readonly resolvedType = computed(() => this.variant() ?? this.type());
 
   readonly pressed = output<void>();
 }
