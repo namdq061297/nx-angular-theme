@@ -50,7 +50,7 @@
       ></app-text-input>
 
       <app-button label="Đăng nhập" [disabled]="!canLogin()" (pressed)="onLogin()"></app-button>
-      <app-button label="Đăng ký" [variant]="'secondary'" [disabled]="!canLogin()"></app-button>
+      <app-button label="Đăng ký" [variant]="'secondary'" (pressed)="goToRegister()"></app-button>
     </form>
 
     <p class="register-copy body_small_medium">

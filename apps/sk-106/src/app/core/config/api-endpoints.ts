@@ -5,6 +5,10 @@ export const API_ENDPOINTS = {
     refresh: 'auth/refresh',
     profile: 'auth/profile',
   },
+  captcha: {
+    generate: 'captcha/generate',
+    verify: 'captcha/verify',
+  },
   users: {
     list: 'users',
     detail: (id: number | string) => `users/${id}`,
