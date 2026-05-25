@@ -28,6 +28,7 @@
     "@taiga-ui/kit": "^5.7.0",
     "date-fns": "^4.2.1",
     "express": "^5.1.0",
+    "ngx-otp-input": "^2.0.0",
     "rxjs": "~7.8.0",
     "svg-captcha": "^1.4.0",
     "tslib": "^2.3.0"

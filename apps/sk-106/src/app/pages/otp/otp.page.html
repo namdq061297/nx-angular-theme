@@ -15,22 +15,30 @@
       <span class="header-spacer" aria-hidden="true"></span>
     </header>
 
-    <section class="login-note" aria-label="Thông báo đăng nhập">
-      <p class="body_small_regular">
-      Vui lòng nhập mã OTP vừa được gửi đến số điện thoại 0345867123
+    <section aria-label="Thông báo đăng nhập">
+      <p class="body_small_regular text-center">
+      Vui lòng nhập mã OTP vừa được gửi đến số<br> điện thoại 0345867123
       </p>
     </section>
 
-    <div class="grid w-full grid-cols-2 gap-4">
-      <app-button label="Huỷ" type="secondary"></app-button>
-      <app-button label="Xác nhận"></app-button>
-    </div>
-
-
-    <p class="register-copy body_small_medium">
+    <form [formGroup]="form">
+      <ngx-otp-input
+        formControlName="otp"
+        [length]="6"
+        [status]="status"
+        class="otp-input"
+        (otpComplete)="verifyOtp($event)"
+      ></ngx-otp-input>
+    </form>
+    <p class="register-copy body_small_regular">
      Chưa nhận được mã OTP? Gửi lại sau 
       <a class="body_small_semibold">(01:59)</a>
     </p>
+
+    <div class="grid w-full grid-cols-2 gap-4">
+      <app-button label="Huỷ" type="secondary-grey" variant="secondary-grey"></app-button>
+      <app-button label="Xác nhận"></app-button>
+    </div>
   </section>
 </main>
 <app-footer />

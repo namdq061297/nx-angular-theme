@@ -8,6 +8,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
       class="app-button"
       [class.linear]="isLinear()"
       [class.secondary]="resolvedType() === 'secondary'"
+      [class.secondary-grey]="resolvedType() === 'secondary-grey'"
       [disabled]="disabled()"
       (click)="pressed.emit()"
     >
@@ -56,7 +57,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
         color: var(--color-text-brand-primary, #006b3b);
       }
 
-      .app-button:not(.secondary):not(:disabled):hover {
+      .app-button:not(.secondary):not(.secondary-grey):not(:disabled):hover {
         background: var(--Gradient-Hover, linear-gradient(90deg, var(--Gradient-bg-solid-leading_hover, #99C82A) 0%, var(--Gradient-bg-solid-trailing_hover, #2A9566) 100%));
       }
 
@@ -72,14 +73,26 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
         background: var(--color-bg-surface-primary, #ffffff);
         color: var(--color-text-disable, #717680);
       }
+
+      .app-button.secondary-grey {
+        border: 1px solid var(--color-border-input-primary, #D9D9D9);
+        background: var(--color-bg-surface-primary, #ffffff);
+        color: var(--color-text-primary, #262626);
+      }
+
+      .app-button.secondary-grey:disabled {
+        background: var(--color-bg-disable, #F5F5F5);
+        color: var(--color-text-disable, #717680);
+      }
+
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
   label = input.required<string>();
-  type = input<'primary' | 'secondary'>('primary');
-  variant = input<'primary' | 'secondary' | undefined>(undefined);
+  type = input<'primary' | 'secondary' | 'secondary-grey' >('primary');
+  variant = input<'primary' | 'secondary' | 'secondary-grey' |  undefined>(undefined);
   disabled = input(false);
   isLinear = input(false);
 
