@@ -20,23 +20,32 @@ const svgCaptcha = require('svg-captcha') as {
     noise: number;
     width: number;
     height: number;
+    fontSize?: number;
     color: boolean;
     ignoreChars: string;
+    background: string;
   }) => { data: string; text: string };
+  loadFont: (filepath: string) => void;
 };
 const captchaStore = new Map<string, { text: string; expiresAt: number }>();
 const CAPTCHA_TTL_MS = 3 * 60 * 1000;
+const CAPTCHA_TEXT_COLOR = '#004522';
+const CAPTCHA_FONT_PATH = join(process.cwd(), 'apps/sk-106/public/assets/fonts/Inter/Inter-Bold.otf');
+
+svgCaptcha.loadFont(CAPTCHA_FONT_PATH);
 
 app.use(express.json());
 
 app.get('/api/captcha/generate', (_req, res) => {
   const captcha = svgCaptcha.create({
     size: 5,
-    noise: 3,
+    noise: 2,
     width: 130,
     height: 44,
-    color: true,
+    fontSize: 38,
+    color: false,
     ignoreChars: '0oO1ilI',
+    background: '#F5F5F5'
   });
 
   const captchaId = randomUUID();
@@ -45,7 +54,8 @@ app.get('/api/captcha/generate', (_req, res) => {
     expiresAt: Date.now() + CAPTCHA_TTL_MS,
   });
 
-  const imageData = `data:image/svg+xml;base64,${Buffer.from(captcha.data).toString('base64')}`;
+  const styledCaptcha = captcha.data.replace(/<path fill="[^\"]+" d="/g, `<path fill="${CAPTCHA_TEXT_COLOR}" d="`);
+  const imageData = `data:image/svg+xml;base64,${Buffer.from(styledCaptcha).toString('base64')}`;
   res.status(200).json({ captchaId, imageData, expiresIn: CAPTCHA_TTL_MS });
 });
 
