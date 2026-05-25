@@ -53,7 +53,14 @@ export class LoginPage {
     console.log('Document ID:', this.documentId());
     console.log('Phone Number:', this.phoneNumber());
     this.authState.login();
-    this.router.navigateByUrl('/otp');
+    // this.router.navigate(['/otp'], {
+    //   queryParams: {
+    //     phone: this.phoneNumber().trim(),
+    //   },
+    // });
+    this.router.navigate(['/otp'], {
+      state: { phone: this.phoneNumber().trim() },
+    });
   }
 
   protected onDocumentIdChange(value: string): void {

@@ -1,14 +1,10 @@
 import { Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthStateService } from '../../core/services/auth-state.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { ImageComponent } from '../../shared/components/image/image.component';
-import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
-import { PHONE_PATTERN_SOURCE } from '../../shared/validation/phone.validation';
-import { LOGIN_VALIDATION_MESSAGES } from '../../shared/validation/validation-messages';
 import { NgxOtpInputComponent, type OtpStatus } from 'ngx-otp-input';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
@@ -27,9 +23,15 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
   ],
 })
 export class OtpPage {
-  private readonly authState = inject(AuthStateService);
   private readonly location = inject(Location);
   private readonly router = inject(Router);
+  protected readonly phoneNumber = signal('');
+  protected readonly otp = signal('');
+
+  constructor() {
+    const phone = this.router.getCurrentNavigation()?.extras.state?.['phone'] ?? history.state?.phone ?? '';
+    this.phoneNumber.set(phone);
+  }
 
   status: OtpStatus = 'idle';
 
@@ -39,6 +41,9 @@ export class OtpPage {
 
   verifyOtp(code: string): void {
     console.log('Verifying OTP code:', code);
+    if (code?.length === 6) {
+      this.otp.set(code);
+    }
     // Verify the code, then set status to 'success' or 'error'
   }
 

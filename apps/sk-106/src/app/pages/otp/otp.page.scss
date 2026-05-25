@@ -103,7 +103,7 @@
 }
 
 .otp-input ::ng-deep .ngx-otp-input-active {
-  border-color: var(--color-border-brand-primary);
+  border: 2px solid var(--color-border-brand-primary);
 }
 
 .otp-input ::ng-deep .ngx-otp-input-failed {

@@ -54,3 +54,15 @@
 .footer__link:hover {
   background: var(--color-bg-brand-primary);
 }
+
+@media (max-width: 640px) {
+  .footer__content {
+    .label_medium_medium {
+      margin-bottom: 8px;
+    }
+    display: block;
+    .footer__button {
+      width: 50%;
+    }
+  }
+}
