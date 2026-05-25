@@ -14,6 +14,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/register/register.page').then((m) => m.RegisterPage),
   },
   {
+    path: 'otp',
+    loadComponent: () => import('./pages/otp/otp.page').then((m) => m.OtpPage),
+  },
+  {
     path: '',
     canActivateChild: [authChildGuard],
     loadComponent: () =>

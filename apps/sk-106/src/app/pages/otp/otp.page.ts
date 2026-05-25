@@ -11,13 +11,13 @@ import { PHONE_PATTERN_SOURCE } from '../../shared/validation/phone.validation';
 import { LOGIN_VALIDATION_MESSAGES } from '../../shared/validation/validation-messages';
 
 @Component({
-  selector: 'app-login-page',
-  templateUrl: './login.page.html',
-  styleUrl: './login.page.scss',
+  selector: 'app-otp-page',
+  templateUrl: './otp.page.html',
+  styleUrls: ['./otp.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ButtonComponent, IconComponent, ImageComponent, TextInputComponent, FooterComponent],
 })
-export class LoginPage {
+export class OtpPage {
   private readonly authState = inject(AuthStateService);
   private readonly location = inject(Location);
   private readonly router = inject(Router);
@@ -28,39 +28,10 @@ export class LoginPage {
   protected readonly documentId = signal('');
   protected readonly phoneNumber = signal('');
 
-  readonly canLogin = computed(() => {
-    const documentId = this.documentId().trim();
-    const phoneNumber = this.phoneNumber().trim();
-
-    return documentId.length > 0 && phoneNumber.length > 0;
-  });
 
   protected goBack(): void {
     this.location.back();
   }
 
-  protected goToRegister(): void {
-    this.router.navigateByUrl('/register');
-  }
-
-  protected onLogin(): void {
-    this.submitAttempted.set(true);
-
-    if (!this.canLogin()) {
-      return;
-    }
-
-    console.log('Document ID:', this.documentId());
-    console.log('Phone Number:', this.phoneNumber());
-    this.authState.login();
-    this.router.navigateByUrl('/otp');
-  }
-
-  protected onDocumentIdChange(value: string): void {
-    this.documentId.set(value);
-  }
-
-  protected onPhoneNumberChange(value: string): void {
-    this.phoneNumber.set(value);
-  }
+ 
 }
