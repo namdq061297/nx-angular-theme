@@ -1,5 +1,5 @@
 import { Location, isPlatformBrowser } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -61,8 +61,9 @@ export class RegisterPage {
     const fullName = this.fullName().trim();
     const documentId = this.documentId().trim();
     const phoneNumber = this.phoneNumber().trim();
+    const captchaCode = this.captchaCode().trim();
 
-    return fullName.length > 0 && documentId.length > 0 && phoneNumber.length > 0;
+    return fullName.length > 0 && documentId.length > 0 && phoneNumber.length > 0 && captchaCode.length > 0;
   });
 
   protected goBack(): void {
@@ -92,9 +93,9 @@ export class RegisterPage {
 
     const verified = await this.verifyCaptcha();
     if (!verified) {
-      this.captchaInvalidMessage.set(this.validationMessages.captchaInvalid);
-      this.captchaCode.set('');
-      await this.refreshCaptcha();
+      if (this.captchaInvalidMessage() === this.validationMessages.captchaInvalid) {
+        await this.refreshCaptcha(false);
+      }
       return;
     }
 
@@ -122,14 +123,16 @@ export class RegisterPage {
     this.captchaInvalidMessage.set('');
   }
 
-  protected async refreshCaptcha(): Promise<void> {
+  protected async refreshCaptcha(clearInvalidMessage = true): Promise<void> {
     if (!this.captchaBaseUrl()) {
       return;
     }
 
     this.captchaLoading.set(true);
     this.captchaLoadError.set(false);
-    this.captchaInvalidMessage.set('');
+    if (clearInvalidMessage) {
+      this.captchaInvalidMessage.set('');
+    }
 
     try {
       const response = await firstValueFrom(
@@ -152,10 +155,16 @@ export class RegisterPage {
           input: this.captchaCode(),
         }),
       );
-
+      if (!response.success) {
+        this.captchaInvalidMessage.set(this.validationMessages.captchaInvalid);
+      }
       return response.success;
-    } catch {
-      this.captchaInvalidMessage.set(this.validationMessages.captchaLoadFailed);
+    } catch (error) {
+      if (error instanceof HttpErrorResponse && (error.status === 400 || error.status === 401)) {
+        this.captchaInvalidMessage.set(this.validationMessages.captchaInvalid);
+      } else {
+        this.captchaInvalidMessage.set(this.validationMessages.captchaLoadFailed);
+      }
       return false;
     }
   }

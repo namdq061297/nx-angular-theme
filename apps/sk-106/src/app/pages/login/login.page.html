@@ -50,12 +50,11 @@
       ></app-text-input>
 
       <app-button label="Đăng nhập" [disabled]="!canLogin()" (pressed)="onLogin()"></app-button>
-      <app-button label="Đăng ký" [variant]="'secondary'" (pressed)="goToRegister()"></app-button>
     </form>
 
     <p class="register-copy body_small_medium">
       Chưa có thông tin đăng nhập?
-      <a class="body_small_semibold" href="#">Đăng ký</a>
+      <a class="body_small_semibold" href="#" (click)="goToRegister()">Đăng ký</a>
     </p>
   </section>
 </main>
