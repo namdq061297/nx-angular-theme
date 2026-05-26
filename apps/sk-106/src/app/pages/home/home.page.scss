@@ -1,16 +1,114 @@
 .page {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 24px;
-  background: var(--color-text-inverse);
-  border: 1px solid var(--color-border-primary-brand);
-  border-radius: 16px;
-  margin-top: 24px;
+  padding: 24px 16px 40px;
+  display: grid;
+  gap: 18px;
 }
 
-.token-example {
-  color: var(--color-text-accent-green);
-  font-size: var(--font-size-20);
+.request-search {
+  border-radius: 14px;
+  padding: 20px 20px 18px;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+
+.request-search__title {
+  margin: 0;
+  color: var(--color-text-primary, #181d27);
+  font-size: clamp(1.25rem, 1.15rem + 0.45vw, 1.55rem);
+  font-weight: 700;
+  text-align: center;
+}
+
+.request-search__input {
+  // width: min(100%, 610px);
+}
+
+.request-search__input ::ng-deep .text-input__control {
+  border-radius: 999px;
+  min-height: 48px;
+  width: 400px;
+}
+
+.request-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+  border-radius: 16px;
+  padding: 6px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.07);
+  width: min(100%, 800px);
+  justify-self: center;
+  margin-inline: auto;
+
+}
+
+.request-tabs__item {
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--color-text-primary, #334155);
+  font-size: 0.92rem;
+  font-weight: 500;
+  min-height: 42px;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.request-tabs__item:hover {
+  background: #f1f6ea;
+}
+
+.request-tabs__item--active {
+  background: #d6e8ad;
+  color: #22743a;
   font-weight: 600;
-  margin: 8px 0 16px;
+}
+
+.request-content {
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e6e8ec;
+  padding: 18px;
+}
+
+.request-content__header {
+  margin-bottom: 14px;
+}
+
+.request-content__header h2 {
+  margin: 0;
+  font-size: 1.125rem;
+  color: #0f172a;
+}
+
+.request-content__header p {
+  margin: 6px 0 0;
+  color: #667085;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 900px) {
+  .request-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 16px 10px 24px;
+    gap: 14px;
+  }
+
+  .request-search {
+    padding: 16px 12px;
+  }
+
+  .request-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .request-content {
+    padding: 14px;
+  }
 }

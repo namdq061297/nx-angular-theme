@@ -10,6 +10,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
       [class.fullWidth]="isFullWidth()"
       [class.secondary]="resolvedType() === 'secondary'"
       [class.secondary-grey]="resolvedType() === 'secondary-grey'"
+      [class.default]="resolvedType() === 'default'"
       [disabled]="disabled()"
       (click)="pressed.emit()"
     >
@@ -88,15 +89,18 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
         background: var(--color-bg-disable, #F5F5F5);
         color: var(--color-text-disable, #717680);
       }
-
+    
+      .app-button.default {
+        background: var(--color-fg-brand-secondary, #6E9E00);
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
   label = input.required<string>();
-  type = input<'primary' | 'secondary' | 'secondary-grey' >('primary');
-  variant = input<'primary' | 'secondary' | 'secondary-grey' |  undefined>(undefined);
+  type = input<'primary' | 'secondary' | 'secondary-grey' | 'default'>('primary');
+  variant = input<'primary' | 'secondary' | 'secondary-grey' | 'default' | undefined>(undefined);
   disabled = input(false);
   isLinear = input(false);
   isFullWidth = input(true);
