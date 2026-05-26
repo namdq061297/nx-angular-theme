@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import 'iconify-icon';
 
 let nextInputId = 0;
 
 @Component({
   selector: 'app-text-input',
+  imports: [],
   template: `
     <label class="text-input" [attr.for]="resolvedId()">
       <span class="text-input__label">
@@ -13,25 +15,31 @@ let nextInputId = 0;
         }
       </span>
 
-      <input
-        class="text-input__control"
-        [class.text-input__control--invalid]="showError()"
-        [id]="resolvedId()"
-        [type]="type()"
-        [value]="value()"
-        [placeholder]="placeholder()"
-        [attr.autocomplete]="autocomplete()"
-        [attr.inputmode]="inputmode()"
-        [attr.pattern]="resolvedPattern()"
-        [disabled]="disabled()"
-        [required]="required()"
-        [attr.aria-required]="required()"
-        [attr.aria-invalid]="showError() ? 'true' : null"
-        [attr.aria-describedby]="showError() ? resolvedId() + '-error' : null"
-        (input)="onInput($event)"
-        (focus)="onFocus()"
-        (blur)="onBlur($event)"
-      />
+      <span class="text-input__field" [class.text-input__field--search]="isSearch()">
+        @if (isSearch()) {
+          <iconify-icon class="text-input__search-icon" icon="lucide:search" aria-hidden="true"></iconify-icon>
+        }
+
+        <input
+          class="text-input__control"
+          [class.text-input__control--invalid]="showError()"
+          [id]="resolvedId()"
+          [type]="type()"
+          [value]="value()"
+          [placeholder]="placeholder()"
+          [attr.autocomplete]="autocomplete()"
+          [attr.inputmode]="inputmode()"
+          [attr.pattern]="resolvedPattern()"
+          [disabled]="disabled()"
+          [required]="required()"
+          [attr.aria-required]="required()"
+          [attr.aria-invalid]="showError() ? 'true' : null"
+          [attr.aria-describedby]="showError() ? resolvedId() + '-error' : null"
+          (input)="onInput($event)"
+          (focus)="onFocus()"
+          (blur)="onBlur($event)"
+        />
+      </span>
 
       @if (showError()) {
         <span class="text-input__error" [id]="resolvedId() + '-error'" role="alert">
@@ -49,6 +57,24 @@ let nextInputId = 0;
       .text-input {
         display: grid;
         gap: 6px;
+      }
+
+      .text-input__field {
+        position: relative;
+        display: block;
+      }
+
+      .text-input__field--search .text-input__control {
+        padding-left: 40px;
+      }
+
+      .text-input__search-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--color-icon-subtle, #5a5a5a);
+        pointer-events: none;
       }
 
       .text-input__label {
@@ -124,6 +150,7 @@ let nextInputId = 0;
       }
     `,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextInputComponent {
@@ -160,7 +187,7 @@ export class TextInputComponent {
     return this.patternErrorMessage();
   });
 
-  label = input.required<string>();
+  label = input<string>();
   type = input('text');
   value = input('');
   placeholder = input('');
@@ -169,6 +196,7 @@ export class TextInputComponent {
   pattern = input<string | undefined>(undefined);
   requiredErrorMessage = input('Trường này là bắt buộc');
   patternErrorMessage = input('Giá trị không đúng định dạng');
+  isSearch = input(false);
   submitted = input(false);
   disabled = input(false);
   required = input(false);

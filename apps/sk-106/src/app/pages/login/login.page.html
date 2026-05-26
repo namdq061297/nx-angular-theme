@@ -1,9 +1,5 @@
 <main class="page">
-  <app-image
-    name="login_bg"
-    alt="Login Background"
-    class="login-bg"
-  ></app-image>
+  <app-image name="login_bg" alt="Login Background" class="login-bg"></app-image>
 
   <section class="login-card">
     <header class="login-header">
@@ -24,31 +20,14 @@
     </section>
 
     <form class="login-form" (submit)="$event.preventDefault(); onLogin()">
-      <app-text-input
-        label="Số giấy tờ tùy thân"
-        placeholder="Nhập số giấy tờ tùy thân"
-        autocomplete="off"
-        [required]="true"
-        [requiredErrorMessage]="validationMessages.documentIdRequired"
-        [submitted]="submitAttempted()"
-        [value]="documentId()"
-        (valueChange)="onDocumentIdChange($event)"
-      ></app-text-input>
+      <app-text-input label="Số giấy tờ tùy thân" placeholder="Nhập số giấy tờ tùy thân" autocomplete="off"
+        [required]="true" [requiredErrorMessage]="validationMessages.documentIdRequired" [submitted]="submitAttempted()"
+        [value]="documentId()" (valueChange)="onDocumentIdChange($event)"></app-text-input>
 
-      <app-text-input
-        label="Số điện thoại"
-        placeholder="Nhập số điện thoại"
-        autocomplete="tel"
-        inputmode="numeric"
-        [pattern]="phonePattern"
-        [required]="true"
-        [requiredErrorMessage]="validationMessages.phoneRequired"
-        [patternErrorMessage]="validationMessages.phonePattern"
-        [submitted]="submitAttempted()"
-        [value]="phoneNumber()"
-        (valueChange)="onPhoneNumberChange($event)"
-      ></app-text-input>
-
+      <app-text-input label="Số điện thoại" placeholder="Nhập số điện thoại" autocomplete="tel" inputmode="numeric"
+        [pattern]="phonePattern" [required]="true" [requiredErrorMessage]="validationMessages.phoneRequired"
+        [patternErrorMessage]="validationMessages.phonePattern" [submitted]="submitAttempted()" [value]="phoneNumber()"
+        (valueChange)="onPhoneNumberChange($event)"></app-text-input>
       <app-button label="Đăng nhập" [disabled]="!canLogin()" (pressed)="onLogin()"></app-button>
     </form>
 
