@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { HOME_TAB_COMPONENTS, ProductTabKey } from './home-tab-content.components';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 interface TabContent {
   key: ProductTabKey;
@@ -39,7 +40,7 @@ const TAB_CONTENT: TabContent[] = [
 
 @Component({
   selector: 'app-home-page',
-  imports: [TextInputComponent, CommonModule],
+  imports: [TextInputComponent, CommonModule, FooterComponent],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
