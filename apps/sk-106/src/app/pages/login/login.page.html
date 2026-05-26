@@ -54,7 +54,7 @@
 
     <p class="register-copy body_small_medium">
       Chưa có thông tin đăng nhập?
-      <a class="body_small_semibold" href="#" (click)="goToRegister()">Đăng ký</a>
+      <a class="body_small_semibold" href="#" (click)="$event.preventDefault(); goToRegister()">Đăng ký</a>
     </p>
   </section>
 </main>

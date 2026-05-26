@@ -15,6 +15,7 @@ export const routes: Routes = [
   },
   {
     path: 'otp',
+    canActivate: [guestGuard],
     loadComponent: () => import('./pages/otp/otp.page').then((m) => m.OtpPage),
   },
   {

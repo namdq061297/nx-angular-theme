@@ -7,6 +7,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
       type="button"
       class="app-button"
       [class.linear]="isLinear()"
+      [class.fullWidth]="isFullWidth()"
       [class.secondary]="resolvedType() === 'secondary'"
       [class.secondary-grey]="resolvedType() === 'secondary-grey'"
       [disabled]="disabled()"
@@ -23,7 +24,6 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
       }
 
       .app-button {
-        width: 100%;
         border: none;
         border-radius: 10px;
         padding: 10px 16px;
@@ -41,6 +41,10 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
         transition:
           filter 120ms ease,
           transform 120ms ease;
+      }
+
+      .app-button.fullWidth {
+        width: 100%;
       }
 
       .app-button.linear {
@@ -95,6 +99,7 @@ export class ButtonComponent {
   variant = input<'primary' | 'secondary' | 'secondary-grey' |  undefined>(undefined);
   disabled = input(false);
   isLinear = input(false);
+  isFullWidth = input(true);
 
   protected readonly resolvedType = computed(() => this.variant() ?? this.type());
 

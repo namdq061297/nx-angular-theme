@@ -6,10 +6,31 @@
 .shell-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 16px 24px;
   background: var(--color-text-inverse);
-  border-bottom: 1px solid var(--color-border-primary-brand);
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.header-left,
+.header-center,
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-center {
+  justify-content: center;
+}
+
+.header-right {
+  justify-content: flex-end;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .brand {
@@ -21,13 +42,48 @@
 }
 
 .logout-btn {
-  border: 1px solid var(--color-border-primary-brand);
-  background: var(--color-text-inverse);
-  color: var(--color-text-default);
-  border-radius: 8px;
-  padding: 8px 12px;
-  cursor: pointer;
-  font-size: var(--font-size-14);
+  width: auto;
+}
+
+.requests-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-brand-primary);
+  font-size: var(--font-size-16);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.request-count {
+  min-width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-brand-primary);
+  background: var(--color-bg-brand-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-brand-primary);
+  font-weight: 600;
+}
+
+.greeting {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-16);
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+}
+
+app-button.logout-btn::ng-deep .app-button.secondary-grey {
+  border: 1px solid var(--color-border-disable);
+  background: var(--color-bg-surface-primary, #ffffff);
+  color: var(--color-text-error);
+}
+
+app-button.logout-btn::ng-deep .app-button.secondary-grey:not(:disabled):hover {
+  background: var(--color-bg-surface-primary, #ffffff);
 }
 
 .shell-nav {
@@ -65,6 +121,16 @@
   }
 
   .shell-content {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     padding: 0 8px 16px;
   }
+}
+
+@media (max-width: 640px) {
+  .shell-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  
 }

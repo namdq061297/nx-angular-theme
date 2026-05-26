@@ -27,8 +27,8 @@
     </p>
 
     <div class="grid w-full grid-cols-2 gap-4">
-      <app-button label="Huỷ" type="secondary-grey" variant="secondary-grey"></app-button>
-      <app-button [disabled]="otp().length !== 6" label="Xác nhận"></app-button>
+      <app-button (pressed)="goBack()" label="Huỷ" type="secondary-grey" variant="secondary-grey"></app-button>
+      <app-button (pressed)="onConfirm()" [disabled]="otp().length !== 6" label="Xác nhận"></app-button>
     </div>
   </section>
 </main>

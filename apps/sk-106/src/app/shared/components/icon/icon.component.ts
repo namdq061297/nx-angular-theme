@@ -7,8 +7,8 @@ import { ICONS, type IconName } from '@icons';
     <img
       [src]="src()"
       [alt]="alt()"
-      [style.width.px]="size()"
-      [style.height.px]="size()"
+      [style.width.px]="resolvedWidth()"
+      [style.height.px]="resolvedHeight()"
       class="app-icon"
     />
   `,
@@ -30,7 +30,11 @@ import { ICONS, type IconName } from '@icons';
 export class IconComponent {
   name = input.required<IconName>();
   size = input<number>(24);
+  width = input<number | undefined>(undefined);
+  height = input<number | undefined>(undefined);
   alt = input<string>('');
 
   src = computed(() => ICONS[this.name()]);
+  resolvedWidth = computed(() => this.width() ?? this.size());
+  resolvedHeight = computed(() => this.height() ?? this.size());
 }
