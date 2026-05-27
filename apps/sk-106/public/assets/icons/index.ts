@@ -9,6 +9,7 @@ export const ICONS = {
   ic_credit_card: '/assets/icons/ic_credit_card.svg',
   ic_debit_card: '/assets/icons/ic_debit_card.svg',
   ic_check_circle_fill: '/assets/icons/ic_check_circle_fill.svg',
+  ic_check_fill_success: '/assets/icons/ic_check_fill_success.svg',
 } as const;
 
 export type IconName = keyof typeof ICONS;

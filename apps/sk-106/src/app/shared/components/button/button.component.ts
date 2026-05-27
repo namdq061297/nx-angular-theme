@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import 'iconify-icon';
 
 @Component({
   selector: 'app-button',
@@ -14,6 +15,10 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
       [disabled]="disabled()"
       (click)="pressed.emit()"
     >
+      @if (leftIconName()) {
+        <iconify-icon class="app-button__icon" [icon]="leftIconName()" width="20" height="20" aria-hidden="true"></iconify-icon>
+      }
+
       {{ label() }}
     </button>
   `,
@@ -25,6 +30,10 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
       }
 
       .app-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
         border: none;
         border-radius: 10px;
         padding: 10px 16px;
@@ -93,14 +102,20 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
       .app-button.default {
         background: var(--color-fg-brand-secondary, #6E9E00);
       }
+
+      .app-button__icon {
+        flex: 0 0 auto;
+      }
     `,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
   label = input.required<string>();
   type = input<'primary' | 'secondary' | 'secondary-grey' | 'default'>('primary');
   variant = input<'primary' | 'secondary' | 'secondary-grey' | 'default' | undefined>(undefined);
+  leftIconName = input<string | undefined>(undefined);
   disabled = input(false);
   isLinear = input(false);
   isFullWidth = input(true);

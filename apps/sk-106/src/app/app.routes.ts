@@ -10,6 +10,8 @@ export const routes: Routes = [
   },
   {
     path: 'register',
+    loadComponent: () =>
+      import('./layouts/app-shell/app-shell.layout').then((m) => m.AppShellLayout),
     children: [
       {
         path: '',
