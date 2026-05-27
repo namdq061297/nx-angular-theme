@@ -15,10 +15,9 @@
     <aside class="category-sidebar" aria-label="Danh mục sản phẩm">
       @for (category of categories; track category.key) {
       <button type="button" class="category-btn" [class.category-btn--active]="selectedCategory() === category.key"
-        [class.category-btn--active-all]="category.key === 'all'"
-        (click)="setCategory(category.key)">
+        [class.category-btn--active-all]="category.key === 'all'" (click)="setCategory(category.key)">
         @if(category.key !== 'all') {
-          <app-icon class="icon_connector" [width]="12" [height]="32" name="ic_connector" />
+        <app-icon class="icon_connector" [width]="12" [height]="32" name="ic_connector" />
         }
         <span class="body_small_regular">{{ category.label }}</span>
         @if (category.key === 'all') {
@@ -29,7 +28,7 @@
     </aside>
 
     <div class="record-list" aria-live="polite">
-      @if (filteredRecords().length === 0) {
+      @if (filteredRecords().length > 0) {
       @for (record of filteredRecords(); track record.id + '-' + record.registerTime) {
       <article class="record-card">
         <div class="record-col">

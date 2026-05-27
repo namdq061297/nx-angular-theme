@@ -12,6 +12,9 @@ export const ICONS = {
   ic_check_fill_success: '/assets/icons/ic_check_fill_success.svg',
   ic_connector: '/assets/icons/ic_connector.svg',
   ic_empty_list: '/assets/icons/ic_empty_list.svg',
+  ic_select_service: '/assets/icons/ic_select_service.svg',
+  ic_user_info: '/assets/icons/ic_user_info.svg',
+  ic_calendar: '/assets/icons/ic_calendar.svg',
 } as const;
 
 export type IconName = keyof typeof ICONS;
