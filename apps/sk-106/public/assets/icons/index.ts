@@ -10,6 +10,8 @@ export const ICONS = {
   ic_debit_card: '/assets/icons/ic_debit_card.svg',
   ic_check_circle_fill: '/assets/icons/ic_check_circle_fill.svg',
   ic_check_fill_success: '/assets/icons/ic_check_fill_success.svg',
+  ic_connector: '/assets/icons/ic_connector.svg',
+  ic_empty_list: '/assets/icons/ic_empty_list.svg',
 } as const;
 
 export type IconName = keyof typeof ICONS;

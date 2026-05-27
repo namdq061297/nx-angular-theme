@@ -2,6 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, s
 import 'iconify-icon';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
 type CategoryKey = 'all' | 'credit' | 'debit' | 'loan' | 'insurance' | 'investment';
 
@@ -90,7 +91,7 @@ const RECORDS: RegisterRecord[] = [
 @Component({
   selector: 'app-register-list-page',
   standalone: true,
-  imports: [TextInputComponent, ButtonComponent],
+  imports: [TextInputComponent, ButtonComponent, IconComponent],
   templateUrl: './register-list.page.html',
   styleUrl: './register-list.page.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

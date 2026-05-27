@@ -3,92 +3,87 @@
     <h1 class="title_medium">Danh sách đăng ký</h1>
 
     <div class="head-actions">
-      <app-text-input
-        [isSearch]="true"
-        [label]="''"
-        [value]="keyword()"
-        [placeholder]="'Tìm kiếm thông tin hồ sơ đăng ký'"
-        (valueChange)="onSearchChange($event)"
-      />
+      <app-text-input [isSearch]="true" [label]="''" [value]="keyword()"
+        [placeholder]="'Tìm kiếm thông tin hồ sơ đăng ký'" (valueChange)="onSearchChange($event)" />
 
       <!-- <app-button label="Đăng ký mới" [isFullWidth]="false" type="primary" /> -->
-       <app-button label="Đăng ký mới" [isFullWidth]="false" leftIconName="lucide:plus"/>
+      <app-button label="Đăng ký mới" [isFullWidth]="false" leftIconName="lucide:plus" />
     </div>
   </section>
 
   <section class="register-list-layout">
     <aside class="category-sidebar" aria-label="Danh mục sản phẩm">
       @for (category of categories; track category.key) {
-        <button
-          type="button"
-          class="category-btn"
-          [class.category-btn--active]="selectedCategory() === category.key"
-          (click)="setCategory(category.key)"
-        >
-          <span class="body_small_regular">{{ category.label }}</span>
-          @if (category.key === 'all') {
-            <span class="category-count">{{ totalFilteredCount() }}</span>
-          }
-        </button>
+      <button type="button" class="category-btn" [class.category-btn--active]="selectedCategory() === category.key"
+        [class.category-btn--active-all]="category.key === 'all'"
+        (click)="setCategory(category.key)">
+        @if(category.key !== 'all') {
+          <app-icon class="icon_connector" [width]="12" [height]="32" name="ic_connector" />
+        }
+        <span class="body_small_regular">{{ category.label }}</span>
+        @if (category.key === 'all') {
+        <span class="category-count">{{ totalFilteredCount() }}</span>
+        }
+      </button>
       }
     </aside>
 
     <div class="record-list" aria-live="polite">
-      @if (filteredRecords().length > 0) {
-        @for (record of filteredRecords(); track record.id + '-' + record.registerTime) {
-          <article class="record-card">
-            <div class="record-col">
-              <span class="body_small_regular">Mã đăng ký</span>
-              <h2 class="record-id">{{ record.id }}</h2>
+      @if (filteredRecords().length === 0) {
+      @for (record of filteredRecords(); track record.id + '-' + record.registerTime) {
+      <article class="record-card">
+        <div class="record-col">
+          <span class="body_small_regular">Mã đăng ký</span>
+          <h2 class="record-id">{{ record.id }}</h2>
 
-              <span class="body_small_regular">Sản phẩm dịch vụ đăng ký</span>
-              <p class="record-products">
-                @if (record.products.includes('credit')) {
-                  <span class="body_small_medium">Thẻ tín dụng</span>
-                }
-                @if (record.products.includes('debit')) {
-                  <span class="body_small_medium">Thẻ ghi nợ</span>
-                }
-                @if (record.products.includes('loan')) {
-                  <span class="body_small_medium">Vay</span>
-                }
-                @if (record.products.includes('insurance')) {
-                  <span class="body_small_medium">Bảo hiểm</span>
-                }
-                @if (record.products.includes('investment')) {
-                  <span class="body_small_medium">Đầu tư</span>
-                }
-              </p>
-            </div>
+          <span class="body_small_regular">Sản phẩm dịch vụ đăng ký</span>
+          <p class="record-products">
+            @if (record.products.includes('credit')) {
+            <span class="body_small_medium">Thẻ tín dụng</span>
+            }
+            @if (record.products.includes('debit')) {
+            <span class="body_small_medium">Thẻ ghi nợ</span>
+            }
+            @if (record.products.includes('loan')) {
+            <span class="body_small_medium">Vay</span>
+            }
+            @if (record.products.includes('insurance')) {
+            <span class="body_small_medium">Bảo hiểm</span>
+            }
+            @if (record.products.includes('investment')) {
+            <span class="body_small_medium">Đầu tư</span>
+            }
+          </p>
+        </div>
 
-            <div class="record-col">
-              <span class="body_small_regular">Điểm giao dịch</span>
-              <p class="body_small_medium">{{ record.branch }}</p>
+        <div class="record-col">
+          <span class="body_small_regular">Điểm giao dịch</span>
+          <p class="body_small_medium">{{ record.branch }}</p>
 
-              <span class="body_small_regular">Thời gian tư vấn</span>
-              <p class="body_small_medium">{{ record.timeSlot }}</p>
-            </div>
+          <span class="body_small_regular">Thời gian tư vấn</span>
+          <p class="body_small_medium">{{ record.timeSlot }}</p>
+        </div>
 
-            <div class="record-col record-col--meta">
-              <span class="body_small_regular">Thời gian đăng ký</span>
-              <p class="body_small_medium">{{ record.registerTime }}</p>
+        <div class="record-col record-col--meta">
+          <span class="body_small_regular">Thời gian đăng ký</span>
+          <p class="body_small_medium">{{ record.registerTime }}</p>
 
-              <span class="body_small_regular">Trạng thái</span>
-              <span class="status-tag" [class]="'status-tag ' + getStatusClass(record.status)">
-                {{ record.status }}
-              </span>
-            </div>
+          <span class="body_small_regular">Trạng thái</span>
+          <span class="status-tag" [class]="'status-tag ' + getStatusClass(record.status)">
+            {{ record.status }}
+          </span>
+        </div>
 
-            <button type="button" class="record-next" aria-label="Xem chi tiết">
-              <iconify-icon icon="lucide:chevron-right" width="24" height="24" aria-hidden="true"></iconify-icon>
-            </button>
-          </article>
-        }
+        <button type="button" class="record-next" aria-label="Xem chi tiết">
+          <iconify-icon icon="lucide:chevron-right" width="24" height="24" aria-hidden="true"></iconify-icon>
+        </button>
+      </article>
+      }
       } @else {
-        <article class="record-empty">
-          <h2>Không có hồ sơ phù hợp</h2>
-          <p>Thử đổi bộ lọc danh mục hoặc từ khoá tìm kiếm để xem lại danh sách.</p>
-        </article>
+      <article class="record-empty">
+        <app-icon name="ic_empty_list" [size]="150" alt="No Records"></app-icon>
+        <p class="body_small_regular">Danh sách đăng ký trống</p>
+      </article>
       }
     </div>
   </section>
