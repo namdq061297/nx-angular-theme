@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authChildGuard } from './core/guards/auth.guard';
+import { authChildGuard, authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
 
 export const routes: Routes = [
@@ -10,8 +10,20 @@ export const routes: Routes = [
   },
   {
     path: 'register',
-    canActivate: [guestGuard],
-    loadComponent: () => import('./pages/register/register.page').then((m) => m.RegisterPage),
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        canActivate: [guestGuard],
+        loadComponent: () => import('./pages/register/register.page').then((m) => m.RegisterPage),
+      },
+      {
+        path: 'register-list',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./pages/register-list/register-list.page').then((m) => m.RegisterListPage),
+      },
+    ],
   },
   {
     path: 'otp',

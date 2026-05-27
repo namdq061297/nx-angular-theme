@@ -15,7 +15,7 @@
     <div class="header-right">
       @if (isAuthenticated()) {
         <div class="header-actions">
-          <a class="requests-link" [routerLink]="['/home']">
+          <a class="requests-link" [routerLink]="['/register/register-list']">
             <span>Danh sách yêu cầu</span>
             <span class="request-count">{{ requestCount }}</span>
           </a>
