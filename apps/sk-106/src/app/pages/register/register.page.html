@@ -11,7 +11,7 @@
 					(click)="goToStep(i)"
 				>
 					<span class="stepper-item__icon">
-						<iconify-icon [icon]="step.icon" width="16" height="16" aria-hidden="true"></iconify-icon>
+            <app-icon [color]="isStepActive(i) ? '#fff' : '#939393'" [name]="step.icon" [size]="24" alt=""/>
 					</span>
 					<span class="stepper-item__label">{{ step.label }}</span>
 				</button>

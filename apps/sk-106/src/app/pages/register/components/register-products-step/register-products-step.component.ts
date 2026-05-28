@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
 
 interface ProductOption {
   key: string;
@@ -12,6 +13,7 @@ interface ProductOption {
   templateUrl: './register-products-step.component.html',
   styleUrl: './register-products-step.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [IconComponent],
 })
 export class RegisterProductsStepComponent {
   readonly products = input.required<ReadonlyArray<ProductOption>>();

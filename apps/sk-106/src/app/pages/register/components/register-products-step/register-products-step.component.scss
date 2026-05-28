@@ -12,8 +12,9 @@
 
 .step-subtitle {
   margin: 0;
-  color: var(--color-text-secondary);
+  color: var(--color-basic-bg);
   font-size: var(--font-size-14);
+  font-weight: 400;
 }
 
 .product-list {
@@ -27,15 +28,15 @@
   padding: 14px 12px;
   background: var(--color-bg-surface-primary);
   display: flex;
-  align-items: flex-start;
+  align-items: center; 
   gap: 10px;
   text-align: left;
   cursor: pointer;
 }
 
 .product-item--active {
-  border-color: var(--color-border-brand-primary);
-  background: var(--color-bg-app-default);
+  // border-color: var(--color-border-brand-primary);
+  // background: var(--color-bg-app-default);
 }
 
 .checkbox {

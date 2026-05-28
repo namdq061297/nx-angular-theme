@@ -15,6 +15,7 @@ export const ICONS = {
   ic_select_service: '/assets/icons/ic_select_service.svg',
   ic_user_info: '/assets/icons/ic_user_info.svg',
   ic_calendar: '/assets/icons/ic_calendar.svg',
+  ic_check_green: '/assets/icons/ic_check_green.svg',
 } as const;
 
 export type IconName = keyof typeof ICONS;

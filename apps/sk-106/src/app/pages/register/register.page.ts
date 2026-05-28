@@ -11,13 +11,15 @@ import {
 } from './components/register-contact-step/register-contact-step.component';
 import { RegisterProductsStepComponent } from './components/register-products-step/register-products-step.component';
 import { RegisterScheduleStepComponent } from './components/register-schedule-step/register-schedule-step.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
+import type { IconName } from '@icons';
 
 type RegisterStepKey = 'products' | 'contact' | 'schedule' | 'confirm';
 
 interface RegisterStep {
   key: RegisterStepKey;
   label: string;
-  icon: string;
+  icon: IconName;
 }
 
 interface RegisterProduct {
@@ -27,10 +29,10 @@ interface RegisterProduct {
 }
 
 const REGISTER_STEPS: RegisterStep[] = [
-  { key: 'products', label: 'Sản phẩm dịch vụ', icon: 'lucide:clipboard-list' },
-  { key: 'contact', label: 'Thông tin', icon: 'lucide:user-round' },
-  { key: 'schedule', label: 'Lịch hẹn', icon: 'lucide:calendar-days' },
-  { key: 'confirm', label: 'Xác nhận', icon: 'lucide:badge-check' },
+  { key: 'products', label: 'Sản phẩm dịch vụ', icon: 'ic_select_service' },
+  { key: 'contact', label: 'Thông tin', icon: 'ic_user_info' },
+  { key: 'schedule', label: 'Lịch hẹn', icon: 'ic_calendar' },
+  { key: 'confirm', label: 'Xác nhận', icon: 'ic_verify' },
 ];
 
 const REGISTER_PRODUCTS: RegisterProduct[] = [
@@ -73,6 +75,7 @@ const REGISTER_PRODUCTS: RegisterProduct[] = [
     RegisterContactStepComponent,
     RegisterScheduleStepComponent,
     RegisterConfirmStepComponent,
+    IconComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

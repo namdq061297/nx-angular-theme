@@ -10,7 +10,12 @@
         [class.product-item--active]="isSelected(product.key)"
         (click)="toggle(product.key)"
       >
-        <span class="checkbox" [class.checkbox--active]="isSelected(product.key)"></span>
+      @if (isSelected(product.key)) {
+        <app-icon name="ic_check_green" [size]="16" alt="Đã chọn"></app-icon>
+      }@else {
+        <span class="checkbox"></span>
+      }
+        <!-- <span class="checkbox" [class.checkbox--active]="isSelected(product.key)"></span> -->
         <span class="copy">
           <span class="name">{{ product.label }}</span>
           <span class="desc">{{ product.description }}</span>
