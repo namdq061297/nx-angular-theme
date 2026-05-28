@@ -1,0 +1,94 @@
+<section class="step-block">
+  <h2 class="step-title">Thông tin chung</h2>
+  <p class="step-subtitle">Nhập thông tin liên hệ và một số dữ liệu bổ sung theo sản phẩm đã chọn.</p>
+
+  <div class="group">
+    <h3>Thông tin liên hệ</h3>
+    <div class="grid two-col">
+      <app-text-input
+        [label]="'Họ và tên'"
+        [placeholder]="'Vũ Thanh Nga'"
+        [required]="true"
+        [submitted]="submitted()"
+        [value]="contactValue().fullName"
+        [requiredErrorMessage]="'Vui lòng nhập họ tên'"
+        (valueChange)="updateField('fullName', $event)"
+      />
+      <app-text-input
+        [label]="'Số điện thoại'"
+        [placeholder]="'03x-xxxx-xxxx'"
+        [required]="true"
+        [submitted]="submitted()"
+        [value]="contactValue().phone"
+        [requiredErrorMessage]="'Vui lòng nhập số điện thoại'"
+        (valueChange)="updateField('phone', $event)"
+      />
+      <app-text-input
+        [label]="'Email'"
+        [placeholder]="'example@email.com'"
+        [required]="true"
+        [submitted]="submitted()"
+        [value]="contactValue().email"
+        [requiredErrorMessage]="'Vui lòng nhập email'"
+        (valueChange)="updateField('email', $event)"
+      />
+      <app-text-input
+        [label]="'Ngày sinh'"
+        [placeholder]="'DD/MM/YYYY'"
+        [required]="true"
+        [submitted]="submitted()"
+        [value]="contactValue().birthDate"
+        [requiredErrorMessage]="'Vui lòng nhập ngày sinh'"
+        (valueChange)="updateField('birthDate', $event)"
+      />
+    </div>
+  </div>
+
+  @if (needsFinancialInfo()) {
+    <div class="group">
+      <h3>Thông tin tài chính</h3>
+      <div class="grid two-col">
+        <app-text-input
+          [label]="'Thu nhập trung bình/tháng'"
+          [placeholder]="'VNĐ'"
+          [required]="true"
+          [submitted]="submitted()"
+          [value]="contactValue().income"
+          [requiredErrorMessage]="'Vui lòng nhập thu nhập'"
+          (valueChange)="updateField('income', $event)"
+        />
+        <app-text-input
+          [label]="'Nghề nghiệp'"
+          [placeholder]="'Nhập thông tin'"
+          [required]="true"
+          [submitted]="submitted()"
+          [value]="contactValue().occupation"
+          [requiredErrorMessage]="'Vui lòng nhập nghề nghiệp'"
+          (valueChange)="updateField('occupation', $event)"
+        />
+        <app-text-input
+          [label]="'Nguồn thu nhập chính'"
+          [placeholder]="'Nhập mô tả'"
+          [required]="true"
+          [submitted]="submitted()"
+          [value]="contactValue().incomeSource"
+          [requiredErrorMessage]="'Vui lòng nhập nguồn thu nhập'"
+          (valueChange)="updateField('incomeSource', $event)"
+        />
+        <app-text-input
+          [label]="'Mục đích sử dụng vốn'"
+          [placeholder]="'Chọn mục đích'"
+          [required]="true"
+          [submitted]="submitted()"
+          [value]="contactValue().loanPurpose"
+          [requiredErrorMessage]="'Vui lòng nhập mục đích sử dụng vốn'"
+          (valueChange)="updateField('loanPurpose', $event)"
+        />
+      </div>
+    </div>
+  }
+
+  @if (selectedProductKeys().includes('insurance')) {
+    <p class="tip">Bạn đã chọn Bảo hiểm: vui lòng chuẩn bị thêm thông tin người thụ hưởng ở bước xác nhận.</p>
+  }
+</section>

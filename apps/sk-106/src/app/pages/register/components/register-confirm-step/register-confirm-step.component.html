@@ -1,0 +1,33 @@
+<section class="step-block">
+  <h2 class="step-title">Xác nhận</h2>
+  <p class="step-subtitle">Kiểm tra lại toàn bộ thông tin trước khi gửi yêu cầu đăng ký.</p>
+
+  <div class="summary">
+    <h3>Sản phẩm đã chọn</h3>
+    <ul>
+      @for (label of selectedProductLabels(); track label) {
+        <li>{{ label }}</li>
+      }
+    </ul>
+  </div>
+
+  <div class="summary">
+    <h3>Lịch hẹn đã chọn</h3>
+    <p class="line">Ngày hẹn: {{ selectedDay() }}</p>
+    <p class="line">Khung giờ: {{ selectedSlot() }}</p>
+  </div>
+
+  <label class="agree-row">
+    <input type="checkbox" [checked]="acceptedTerms()" (change)="onTermsChange($event)" />
+    <span>Tôi xác nhận thông tin đã cung cấp là chính xác.</span>
+  </label>
+
+  <label class="agree-row">
+    <input type="checkbox" [checked]="acceptedPolicy()" (change)="onPolicyChange($event)" />
+    <span>Tôi đồng ý với điều khoản sử dụng và chính sách bảo mật của VCB.</span>
+  </label>
+
+  @if (submitted() && (!acceptedTerms() || !acceptedPolicy())) {
+    <p class="error">Vui lòng xác nhận điều khoản trước khi hoàn tất.</p>
+  }
+</section>

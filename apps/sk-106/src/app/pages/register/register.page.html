@@ -1,60 +1,87 @@
 <main class="page">
-  <app-image name="login_bg" alt="Login Background" class="login-bg"></app-image>
-  <app-icon name="ic_logo_full" [height]="50" [width]="130" alt="VCB" />
-  <section class="login-card">
-    <header class="login-header">
-      <button type="button" class="back-button" aria-label="Quay lai" (click)="goBack()">
-        <app-icon name="ic_back" [size]="24" alt=""></app-icon>
-      </button>
+	<section class="register-shell">
+		<header class="stepper" aria-label="Tiến trình đăng ký">
+			@for (step of steps; track step.key; let i = $index) {
+				<button
+					type="button"
+					class="stepper-item"
+					[class.stepper-item--active]="isStepActive(i)"
+					[class.stepper-item--done]="isStepDone(i)"
+					[disabled]="!isStepReachable(i)"
+					(click)="goToStep(i)"
+				>
+					<span class="stepper-item__icon">
+						<iconify-icon [icon]="step.icon" width="16" height="16" aria-hidden="true"></iconify-icon>
+					</span>
+					<span class="stepper-item__label">{{ step.label }}</span>
+				</button>
+			}
+		</header>
 
-      <h1 class="title_medium">Đăng ký</h1>
-      <span class="header-spacer" aria-hidden="true"></span>
-    </header>
+		<section class="step-content">
+			@if (completed()) {
+				<article class="register-success">
+					<h2>Đăng ký thành công</h2>
+					<p>Yêu cầu của bạn đã được ghi nhận. Vui lòng theo dõi trạng thái ở danh sách yêu cầu.</p>
+				</article>
+			} @else {
+				@switch (activeStep().key) {
+					@case ('products') {
+						<app-register-products-step
+							[products]="products"
+							[selectedProductKeys]="selectedProductKeys()"
+							(productToggled)="toggleProduct($event)"
+						/>
+					}
+					@case ('contact') {
+						<app-register-contact-step
+							[selectedProductKeys]="selectedProductKeys()"
+							[contactValue]="contactForm()"
+							[submitted]="isStepSubmitted('contact')"
+							(contactFieldChanged)="updateContactField($event)"
+						/>
+					}
+					@case ('schedule') {
+						<app-register-schedule-step
+							[selectedProductKeys]="selectedProductKeys()"
+							[selectedDay]="selectedDay()"
+							[selectedSlot]="selectedSlot()"
+							[submitted]="isStepSubmitted('schedule')"
+							(dayChanged)="updateSelectedDay($event)"
+							(slotChanged)="updateSelectedSlot($event)"
+						/>
+					}
+					@case ('confirm') {
+						<app-register-confirm-step
+							[selectedProductLabels]="selectedProductLabels()"
+							[selectedDay]="selectedDay()"
+							[selectedSlot]="selectedSlot()"
+							[acceptedTerms]="acceptedTerms()"
+							[acceptedPolicy]="acceptedPolicy()"
+							[submitted]="isStepSubmitted('confirm')"
+							(acceptedTermsChanged)="updateAcceptedTerms($event)"
+							(acceptedPolicyChanged)="updateAcceptedPolicy($event)"
+						/>
+					}
+				}
+			}
+		</section>
 
-    <section>
-      <p class="body_small_regular text-center text-error">
-        Quý khách chưa có thông tin trên hệ thống.<br />Vui lòng <b>ĐĂNG KÝ</b> để sử dụng dịch vụ
-      </p>
-    </section>
-
-    <form class="login-form" (submit)="$event.preventDefault(); onRegister()">
-      <app-text-input label="Họ và tên" placeholder="Nhập họ và tên" autocomplete="name" [required]="true"
-        [requiredErrorMessage]="validationMessages.fullNameRequired" [submitted]="submitAttempted()"
-        [value]="fullName()" (valueChange)="onFullNameChange($event)"></app-text-input>
-
-      <app-text-input label="Số giấy tờ tùy thân" placeholder="Nhập số giấy tờ tùy thân" autocomplete="off"
-        [required]="true" [requiredErrorMessage]="validationMessages.documentIdRequired" [submitted]="submitAttempted()"
-        [value]="documentId()" (valueChange)="onDocumentIdChange($event)"></app-text-input>
-
-      <app-text-input label="Số điện thoại" placeholder="Nhập số điện thoại" autocomplete="tel" inputmode="numeric"
-        [pattern]="phonePattern" [required]="true" [requiredErrorMessage]="validationMessages.phoneRequired"
-        [patternErrorMessage]="validationMessages.phonePattern" [submitted]="submitAttempted()" [value]="phoneNumber()"
-        (valueChange)="onPhoneNumberChange($event)"></app-text-input>
-
-      <div class="captcha-inline">
-        <app-text-input class="captcha-input" label="Mã xác thực" placeholder="Nhập mã CAPTCHA" autocomplete="off"
-          [required]="true" [requiredErrorMessage]="validationMessages.captchaRequired" [submitted]="submitAttempted()"
-          [value]="captchaCode()" (valueChange)="onCaptchaCodeChange($event)"></app-text-input>
-
-        <div class="captcha-panel">
-          <img class="captcha-image" [src]="captchaImageData()" alt="Captcha" />
-          <button type="button" class="captcha-refresh" [disabled]="captchaLoading()" (click)="refreshCaptcha()"
-            aria-label="Làm mới CAPTCHA">
-            <app-icon name="ic_refresh" [size]="20" alt=""></app-icon>
-          </button>
-        </div>
-      </div>
-
-      @if (captchaLoadError()) {
-      <p class="captcha-message body_small_regular">{{ validationMessages.captchaLoadFailed }}</p>
-      }
-
-      @if (captchaInvalidMessage()) {
-      <p class="captcha-message body_small_regular">{{ captchaInvalidMessage() }}</p>
-      }
-
-      <app-button label="Đăng ký" [disabled]="!canRegister()" (pressed)="onRegister()"></app-button>
-    </form>
-  </section>
+		<footer class="actions">
+			<app-button
+				label="Quay lại"
+				type="secondary-grey"
+				variant="secondary-grey"
+				[isFullWidth]="false"
+				[disabled]="currentStepIndex() === 0"
+				(pressed)="previousStep()"
+			/>
+			<app-button
+				[label]="isSubmitting() ? 'Đang xử lý...' : (isLastStep() ? 'Hoàn tất' : 'Tiếp tục')"
+				[isFullWidth]="false"
+				[disabled]="!canContinue() || isSubmitting()"
+				(pressed)="nextStep()"
+			/>
+		</footer>
+	</section>
 </main>
-<app-footer />

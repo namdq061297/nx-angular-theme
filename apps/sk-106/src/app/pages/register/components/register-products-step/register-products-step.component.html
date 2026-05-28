@@ -1,0 +1,21 @@
+<section class="step-block">
+  <h2 class="step-title">Chọn sản phẩm dịch vụ</h2>
+  <p class="step-subtitle">Quý khách có thể đăng ký nhu cầu cho nhiều sản phẩm dịch vụ.</p>
+
+  <div class="product-list">
+    @for (product of products(); track product.key) {
+      <button
+        type="button"
+        class="product-item"
+        [class.product-item--active]="isSelected(product.key)"
+        (click)="toggle(product.key)"
+      >
+        <span class="checkbox" [class.checkbox--active]="isSelected(product.key)"></span>
+        <span class="copy">
+          <span class="name">{{ product.label }}</span>
+          <span class="desc">{{ product.description }}</span>
+        </span>
+      </button>
+    }
+  </div>
+</section>

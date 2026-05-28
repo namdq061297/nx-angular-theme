@@ -1,171 +1,270 @@
-import { Location, isPlatformBrowser } from '@angular/common';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, PLATFORM_ID, computed, inject, signal } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import 'iconify-icon';
 import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
-import { FooterComponent } from '../../shared/components/footer/footer.component';
-import { IconComponent } from '../../shared/components/icon/icon.component';
-import { ImageComponent } from '../../shared/components/image/image.component';
-import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
-import { PHONE_PATTERN_SOURCE } from '../../shared/validation/phone.validation';
-import { LOGIN_VALIDATION_MESSAGES } from '../../shared/validation/validation-messages';
+import { RegisterConfirmStepComponent } from './components/register-confirm-step/register-confirm-step.component';
+import {
+  ContactFieldKey,
+  ContactFormValue,
+  RegisterContactStepComponent,
+} from './components/register-contact-step/register-contact-step.component';
+import { RegisterProductsStepComponent } from './components/register-products-step/register-products-step.component';
+import { RegisterScheduleStepComponent } from './components/register-schedule-step/register-schedule-step.component';
 
-type CaptchaGenerateResponse = {
-  captchaId: string;
-  imageData: string;
-};
+type RegisterStepKey = 'products' | 'contact' | 'schedule' | 'confirm';
 
-type CaptchaVerifyResponse = {
-  success: boolean;
-};
+interface RegisterStep {
+  key: RegisterStepKey;
+  label: string;
+  icon: string;
+}
+
+interface RegisterProduct {
+  key: string;
+  label: string;
+  description: string;
+}
+
+const REGISTER_STEPS: RegisterStep[] = [
+  { key: 'products', label: 'Sản phẩm dịch vụ', icon: 'lucide:clipboard-list' },
+  { key: 'contact', label: 'Thông tin', icon: 'lucide:user-round' },
+  { key: 'schedule', label: 'Lịch hẹn', icon: 'lucide:calendar-days' },
+  { key: 'confirm', label: 'Xác nhận', icon: 'lucide:badge-check' },
+];
+
+const REGISTER_PRODUCTS: RegisterProduct[] = [
+  {
+    key: 'credit',
+    label: 'Thẻ tín dụng',
+    description: 'Cấp hạn mức tín dụng và chi tiêu trước, thanh toán sau.',
+  },
+  {
+    key: 'debit',
+    label: 'Thẻ ghi nợ',
+    description: 'Chi tiêu trực tiếp từ số dư tài khoản thanh toán của bạn.',
+  },
+  {
+    key: 'loan',
+    label: 'Vay',
+    description: 'Giải pháp vay tiêu dùng hoặc vay phục vụ kế hoạch tài chính cá nhân.',
+  },
+  {
+    key: 'insurance',
+    label: 'Bảo hiểm',
+    description: 'Bảo vệ tài chính với các gói bảo hiểm sức khỏe và nhân thọ.',
+  },
+  {
+    key: 'investment',
+    label: 'Đầu tư',
+    description: 'Đầu tư tích lũy với các sản phẩm quỹ và kênh đầu tư linh hoạt.',
+  },
+];
 
 @Component({
   selector: 'app-register-page',
+  standalone: true,
   templateUrl: './register.page.html',
   styleUrl: './register.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ButtonComponent, IconComponent, ImageComponent, TextInputComponent, FooterComponent],
+  imports: [
+    ButtonComponent,
+    RegisterProductsStepComponent,
+    RegisterContactStepComponent,
+    RegisterScheduleStepComponent,
+    RegisterConfirmStepComponent,
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class RegisterPage {
-  private readonly authState = inject(AuthStateService);
-  private readonly location = inject(Location);
   private readonly router = inject(Router);
-  private readonly http = inject(HttpClient);
-  private readonly platformId = inject(PLATFORM_ID);
+  private readonly authState = inject(AuthStateService);
 
-  private readonly captchaBaseUrl = signal('');
+  protected readonly steps = REGISTER_STEPS;
+  protected readonly products = REGISTER_PRODUCTS;
+  protected readonly currentStepIndex = signal(0);
+  protected readonly selectedProductKeys = signal<string[]>([]);
+  protected readonly contactForm = signal<ContactFormValue>({
+    fullName: '',
+    phone: '',
+    email: '',
+    birthDate: '',
+    income: '',
+    occupation: '',
+    incomeSource: '',
+    loanPurpose: '',
+  });
+  protected readonly selectedDay = signal('');
+  protected readonly selectedSlot = signal('');
+  protected readonly acceptedTerms = signal(false);
+  protected readonly acceptedPolicy = signal(false);
+  protected readonly stepSubmitted = signal<Record<RegisterStepKey, boolean>>({
+    products: false,
+    contact: false,
+    schedule: false,
+    confirm: false,
+  });
+  protected readonly isSubmitting = signal(false);
+  protected readonly completed = signal(false);
 
-  protected readonly phonePattern = PHONE_PATTERN_SOURCE;
-  protected readonly validationMessages = LOGIN_VALIDATION_MESSAGES;
-  protected readonly submitAttempted = signal(false);
-  protected readonly fullName = signal('');
-  protected readonly documentId = signal('');
-  protected readonly phoneNumber = signal('');
-  protected readonly captchaId = signal('');
-  protected readonly captchaCode = signal('');
-  protected readonly captchaImageData = signal('');
-  protected readonly captchaLoading = signal(false);
-  protected readonly captchaInvalidMessage = signal('');
-  protected readonly captchaLoadError = signal(false);
-
-  constructor() {
-    if (isPlatformBrowser(this.platformId)) {
-      this.captchaBaseUrl.set(`${window.location.origin}/api/captcha`);
-      void this.refreshCaptcha();
-    }
-  }
-
-  readonly canRegister = computed(() => {
-    const fullName = this.fullName().trim();
-    const documentId = this.documentId().trim();
-    const phoneNumber = this.phoneNumber().trim();
-    const captchaCode = this.captchaCode().trim();
-
-    return fullName.length > 0 && documentId.length > 0 && phoneNumber.length > 0 && captchaCode.length > 0;
+  protected readonly activeStep = computed(() => this.steps[this.currentStepIndex()]);
+  protected readonly isLastStep = computed(() => this.currentStepIndex() === this.steps.length - 1);
+  protected readonly selectedProductLabels = computed(() => {
+    const selected = this.selectedProductKeys();
+    return this.products.filter((product) => selected.includes(product.key)).map((product) => product.label);
+  });
+  protected readonly canContinue = computed(() => {
+    return this.isCurrentStepValid();
   });
 
-  protected goBack(): void {
-    this.location.back();
+  protected toggleProduct(key: string): void {
+    this.selectedProductKeys.update((keys) =>
+      keys.includes(key) ? keys.filter((item) => item !== key) : [...keys, key],
+    );
   }
 
-  protected goToLogin(): void {
-    this.router.navigateByUrl('/login');
+  protected updateContactField(event: { field: ContactFieldKey; value: string }): void {
+    this.contactForm.update((form) => ({ ...form, [event.field]: event.value }));
   }
 
-  protected async onRegister(): Promise<void> {
-    this.submitAttempted.set(true);
-    this.captchaInvalidMessage.set('');
+  protected updateSelectedDay(value: string): void {
+    this.selectedDay.set(value);
+  }
 
-    if (!this.canRegister()) {
+  protected updateSelectedSlot(value: string): void {
+    this.selectedSlot.set(value);
+  }
+
+  protected updateAcceptedTerms(value: boolean): void {
+    this.acceptedTerms.set(value);
+  }
+
+  protected updateAcceptedPolicy(value: boolean): void {
+    this.acceptedPolicy.set(value);
+  }
+
+  protected previousStep(): void {
+    if (this.currentStepIndex() === 0) {
       return;
     }
 
-    if (!this.captchaCode().trim()) {
+    this.currentStepIndex.update((index) => index - 1);
+  }
+
+  protected async nextStep(): Promise<void> {
+    const currentKey = this.activeStep().key;
+    this.markStepSubmitted(currentKey);
+
+    if (!this.isCurrentStepValid()) {
       return;
     }
 
-    if (!this.captchaId()) {
-      this.captchaInvalidMessage.set(this.validationMessages.captchaLoadFailed);
+    if (this.isLastStep()) {
+      await this.submitRegistration();
       return;
     }
 
-    const verified = await this.verifyCaptcha();
-    if (!verified) {
-      if (this.captchaInvalidMessage() === this.validationMessages.captchaInvalid) {
-        await this.refreshCaptcha(false);
-      }
+    this.currentStepIndex.update((index) => index + 1);
+  }
+
+  protected goToStep(index: number): void {
+    if (index < 0 || index > this.currentStepIndex()) {
       return;
     }
 
-    console.log('Full Name:', this.fullName());
-    console.log('Document ID:', this.documentId());
-    console.log('Phone Number:', this.phoneNumber());
-    this.authState.login();
-    this.router.navigateByUrl('/home');
+    this.currentStepIndex.set(index);
   }
 
-  protected onFullNameChange(value: string): void {
-    this.fullName.set(value);
+  protected isStepDone(index: number): boolean {
+    return index < this.currentStepIndex();
   }
 
-  protected onDocumentIdChange(value: string): void {
-    this.documentId.set(value);
+  protected isStepActive(index: number): boolean {
+    return index === this.currentStepIndex();
   }
 
-  protected onPhoneNumberChange(value: string): void {
-    this.phoneNumber.set(value);
+  protected isStepReachable(index: number): boolean {
+    return index <= this.currentStepIndex();
   }
 
-  protected onCaptchaCodeChange(value: string): void {
-    this.captchaCode.set(value);
-    this.captchaInvalidMessage.set('');
+  protected isStepSubmitted(step: RegisterStepKey): boolean {
+    return this.stepSubmitted()[step];
   }
 
-  protected async refreshCaptcha(clearInvalidMessage = true): Promise<void> {
-    if (!this.captchaBaseUrl()) {
-      return;
+  private markStepSubmitted(step: RegisterStepKey): void {
+    this.stepSubmitted.update((state) => ({ ...state, [step]: true }));
+  }
+
+  private isCurrentStepValid(): boolean {
+    const stepKey = this.activeStep().key;
+
+    if (stepKey === 'products') {
+      return this.selectedProductKeys().length > 0;
     }
 
-    this.captchaLoading.set(true);
-    this.captchaLoadError.set(false);
-    if (clearInvalidMessage) {
-      this.captchaInvalidMessage.set('');
+    if (stepKey === 'contact') {
+      return this.isContactValid();
     }
 
-    try {
-      const response = await firstValueFrom(
-        this.http.get<CaptchaGenerateResponse>(`${this.captchaBaseUrl()}/generate`),
-      );
-      this.captchaId.set(response.captchaId);
-      this.captchaImageData.set(response.imageData);
-    } catch {
-      this.captchaLoadError.set(true);
-    } finally {
-      this.captchaLoading.set(false);
+    if (stepKey === 'schedule') {
+      return Boolean(this.selectedDay().trim()) && Boolean(this.selectedSlot().trim());
     }
+
+    if (stepKey === 'confirm') {
+      return this.acceptedTerms() && this.acceptedPolicy();
+    }
+
+    return false;
   }
 
-  private async verifyCaptcha(): Promise<boolean> {
-    try {
-      const response = await firstValueFrom(
-        this.http.post<CaptchaVerifyResponse>(`${this.captchaBaseUrl()}/verify`, {
-          captchaId: this.captchaId(),
-          input: this.captchaCode(),
-        }),
-      );
-      if (!response.success) {
-        this.captchaInvalidMessage.set(this.validationMessages.captchaInvalid);
-      }
-      return response.success;
-    } catch (error) {
-      if (error instanceof HttpErrorResponse && (error.status === 400 || error.status === 401)) {
-        this.captchaInvalidMessage.set(this.validationMessages.captchaInvalid);
-      } else {
-        this.captchaInvalidMessage.set(this.validationMessages.captchaLoadFailed);
-      }
+  private isContactValid(): boolean {
+    const value = this.contactForm();
+    const hasBaseInfo =
+      value.fullName.trim().length > 0 &&
+      value.phone.trim().length > 0 &&
+      value.email.trim().length > 0 &&
+      value.birthDate.trim().length > 0;
+
+    if (!hasBaseInfo) {
       return false;
+    }
+
+    const needsFinancialInfo =
+      this.selectedProductKeys().includes('loan') || this.selectedProductKeys().includes('credit');
+
+    if (!needsFinancialInfo) {
+      return true;
+    }
+
+    return (
+      value.income.trim().length > 0 &&
+      value.occupation.trim().length > 0 &&
+      value.incomeSource.trim().length > 0 &&
+      value.loanPurpose.trim().length > 0
+    );
+  }
+
+  private async submitRegistration(): Promise<void> {
+    const payload = {
+      products: this.selectedProductKeys(),
+      contact: this.contactForm(),
+      schedule: {
+        day: this.selectedDay(),
+        slot: this.selectedSlot(),
+      },
+      submittedAt: new Date().toISOString(),
+    };
+
+    this.isSubmitting.set(true);
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('register_submission_payload', JSON.stringify(payload));
+      }
+      this.authState.login();
+      this.completed.set(true);
+      await this.router.navigateByUrl('/register/register-list');
+    } finally {
+      this.isSubmitting.set(false);
     }
   }
 }

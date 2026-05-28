@@ -1,0 +1,42 @@
+<section class="step-block">
+  <h2 class="step-title">Lịch hẹn</h2>
+  <p class="step-subtitle">Chọn ngày và khung giờ tư vấn phù hợp cho các sản phẩm đã đăng ký.</p>
+
+  <div class="panel">
+    <h3>Ngày hẹn</h3>
+    <div class="chip-list">
+      @for (day of availableDays; track day) {
+        <button
+          type="button"
+          class="chip"
+          [class.chip--active]="selectedDay() === day"
+          (click)="selectDay(day)"
+        >
+          {{ day }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Khung giờ</h3>
+    <div class="chip-list">
+      @for (slot of availableSlots; track slot) {
+        <button
+          type="button"
+          class="chip"
+          [class.chip--active]="selectedSlot() === slot"
+          (click)="selectSlot(slot)"
+        >
+          {{ slot }}
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (submitted() && (!selectedDay() || !selectedSlot())) {
+    <p class="error">Vui lòng chọn đầy đủ ngày hẹn và khung giờ tư vấn.</p>
+  }
+
+  <p class="note">Sản phẩm đã chọn: {{ selectedProductKeys().length }} mục.</p>
+</section>
