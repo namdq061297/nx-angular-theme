@@ -67,6 +67,8 @@
           [inputmode]="'numeric'"
           [requiredErrorMessage]="'Vui lòng nhập hạn mức thẻ đề nghị'"
           (valueChange)="updateField('creditLimit', $event)"
+          [isNumberInput]="true"
+          [isCurrencyInput]="true"
         />
         <label class="select-field">
           <span class="select-field__label">
@@ -103,8 +105,10 @@
           [submitted]="submitted()"
           [value]="contactValue().loanAmount"
           [inputmode]="'numeric'"
+          [isNumberInput]="true"
           [requiredErrorMessage]="'Vui lòng nhập số tiền đề nghị cấp tín dụng'"
           (valueChange)="updateField('loanAmount', $event)"
+          [isCurrencyInput]="true"
         />
         <app-text-input
           [label]="'Thời hạn (<=240 tháng)'"

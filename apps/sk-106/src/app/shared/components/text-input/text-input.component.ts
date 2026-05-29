@@ -1,4 +1,12 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import 'iconify-icon';
 
 let nextInputId = 0;
@@ -14,18 +22,25 @@ let nextInputId = 0;
           <span class="text-input__required" aria-hidden="true">*</span>
         }
       </span>
-
       <span class="text-input__field" [class.text-input__field--search]="isSearch()">
-        @if (isSearch()) {
-          <iconify-icon class="text-input__search-icon" icon="lucide:search" aria-hidden="true"></iconify-icon>
+        @if (isCurrencyInput()) {
+          <div class="vnd-input-wrapper">
+            <p>VND</p>
+          </div>
         }
-
+        @if (isSearch()) {
+          <iconify-icon
+            class="text-input__search-icon"
+            icon="lucide:search"
+            aria-hidden="true"
+          ></iconify-icon>
+        }
         <input
           class="text-input__control"
           [class.text-input__control--invalid]="showError()"
           [id]="resolvedId()"
           [type]="type()"
-          [value]="value()"
+          [value]="displayValue()"
           [placeholder]="placeholder()"
           [attr.autocomplete]="autocomplete()"
           [attr.inputmode]="inputmode()"
@@ -122,11 +137,10 @@ let nextInputId = 0;
         -webkit-text-fill-color: var(--color-text-placeholder, #717680);
         opacity: 1;
         font-weight: 400;
-
       }
 
       .text-input__control:focus-visible {
-        outline: 2px solid var(--color-border-brand-primary, #006B3B);
+        outline: 2px solid var(--color-border-brand-primary, #006b3b);
         // outline-offset: 2px;
       }
 
@@ -137,7 +151,7 @@ let nextInputId = 0;
       .text-input__control:disabled {
         cursor: not-allowed;
         background: var(--color-bg-disable, #f5f5f5);
-        border-color: var(--color-border-disable, #d5d7da);  
+        border-color: var(--color-border-disable, #d5d7da);
       }
 
       .text-input__control:invalid:not(.text-input__control--invalid):not(:disabled) {
@@ -147,6 +161,19 @@ let nextInputId = 0;
 
       .text-input__control.text-input__control--invalid:not(:disabled) {
         border-color: var(--color-border-error-subtle, #fda29b);
+      }
+      .vnd-input-wrapper {
+        position: absolute;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background:  var(--color-bg-secondary, #FAFAFA);
+        height: 100%;
+        border-width: 1px;
+        border-top-right-radius: 8px;
+        padding: 8px;
+        border-bottom-right-radius: 8px;
       }
     `,
   ],
@@ -158,8 +185,24 @@ export class TextInputComponent {
   private readonly hasFocus = signal(false);
 
   private readonly normalizedValue = computed(() => this.value().trim());
-  protected readonly resolvedPattern = computed(() => this.pattern() ?? (this.inputmode() === 'numeric' ? '[0-9]*' : undefined));
-  private readonly hasRequiredError = computed(() => this.required() && this.normalizedValue().length === 0);
+  protected readonly displayValue = computed(() => {
+    if (!this.isNumberInput()) {
+      return this.value();
+    }
+
+    const digitsOnly = this.value().replace(/\D+/g, '');
+    if (!digitsOnly) {
+      return '';
+    }
+
+    return digitsOnly.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  });
+  protected readonly resolvedPattern = computed(
+    () => this.pattern() ?? (this.inputmode() === 'numeric' ? '[0-9]*' : undefined),
+  );
+  private readonly hasRequiredError = computed(
+    () => this.required() && this.normalizedValue().length === 0,
+  );
   private readonly hasPatternError = computed(() => {
     const value = this.normalizedValue();
     const pattern = this.resolvedPattern();
@@ -176,7 +219,12 @@ export class TextInputComponent {
   });
 
   protected readonly showError = computed(() => {
-    return this.submitted() && !this.hasFocus() && !this.disabled() && (this.hasRequiredError() || this.hasPatternError());
+    return (
+      this.submitted() &&
+      !this.hasFocus() &&
+      !this.disabled() &&
+      (this.hasRequiredError() || this.hasPatternError())
+    );
   });
 
   protected readonly errorMessage = computed(() => {
@@ -201,6 +249,8 @@ export class TextInputComponent {
   disabled = input(false);
   required = input(false);
   inputId = input<string | undefined>(undefined);
+  isNumberInput = input(false);
+  isCurrencyInput = input(false);
 
   readonly valueChange = output<string>();
 
@@ -208,7 +258,13 @@ export class TextInputComponent {
 
   protected onInput(event: Event): void {
     const element = event.target as HTMLInputElement;
-    this.valueChange.emit(element.value);
+
+    if (!this.isNumberInput()) {
+      this.valueChange.emit(element.value);
+      return;
+    }
+
+    this.valueChange.emit(element.value.replace(/\D+/g, ''));
   }
 
   protected onFocus(): void {
