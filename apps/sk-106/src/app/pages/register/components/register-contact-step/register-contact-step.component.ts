@@ -5,22 +5,45 @@ export type ContactFieldKey =
   | 'fullName'
   | 'phone'
   | 'email'
-  | 'birthDate'
-  | 'income'
-  | 'occupation'
-  | 'incomeSource'
+  | 'monthlyIncome'
+  | 'creditLimit'
+  | 'cardReceiveMethod'
+  | 'loanAmount'
+  | 'loanTerm'
   | 'loanPurpose';
 
 export interface ContactFormValue {
   fullName: string;
   phone: string;
   email: string;
-  birthDate: string;
-  income: string;
-  occupation: string;
-  incomeSource: string;
+  monthlyIncome: string;
+  creditLimit: string;
+  cardReceiveMethod: string;
+  loanAmount: string;
+  loanTerm: string;
   loanPurpose: string;
 }
+
+const MONTHLY_INCOME_OPTIONS = [
+  { label: '5 - 10 triệu', value: '5-10tr' },
+  { label: '10 - 20 triệu', value: '10-20tr' },
+  { label: '20 - 30 triệu', value: '20-30tr' },
+  { label: '30 - 50 triệu', value: '30-50tr' },
+  { label: 'Trên 50 triệu', value: '50tr+' },
+] as const;
+
+const CARD_RECEIVE_METHOD_OPTIONS = [
+  { label: 'Nhận tại nhà', value: 'home' },
+  { label: 'Nhận tại quầy', value: 'counter' },
+  { label: 'Nhận tại chi nhánh', value: 'branch' },
+] as const;
+
+const LOAN_PURPOSE_OPTIONS = [
+  { label: 'Mua sắm tiêu dùng', value: 'consumption' },
+  { label: 'Thanh toán học phí', value: 'education' },
+  { label: 'Sửa chữa nhà cửa', value: 'home-repair' },
+  { label: 'Kinh doanh cá nhân', value: 'business' },
+] as const;
 
 @Component({
   selector: 'app-register-contact-step',
@@ -35,11 +58,18 @@ export class RegisterContactStepComponent {
   readonly contactValue = input.required<ContactFormValue>();
   readonly submitted = input(false);
 
+  readonly monthlyIncomeOptions = MONTHLY_INCOME_OPTIONS;
+  readonly cardReceiveMethodOptions = CARD_RECEIVE_METHOD_OPTIONS;
+  readonly loanPurposeOptions = LOAN_PURPOSE_OPTIONS;
+
   readonly contactFieldChanged = output<{ field: ContactFieldKey; value: string }>();
 
-  protected readonly needsFinancialInfo = computed(() => {
-    const keys = this.selectedProductKeys();
-    return keys.includes('loan') || keys.includes('credit');
+  protected readonly hasCreditProduct = computed(() => {
+    return this.selectedProductKeys().includes('credit');
+  });
+
+  protected readonly hasLoanProduct = computed(() => {
+    return this.selectedProductKeys().includes('loan');
   });
 
   protected updateField(field: ContactFieldKey, value: string): void {

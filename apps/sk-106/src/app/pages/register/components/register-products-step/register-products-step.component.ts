@@ -4,7 +4,7 @@ import { IconComponent } from '../../../../shared/components/icon/icon.component
 interface ProductOption {
   key: string;
   label: string;
-  description: string;
+  description?: string;
 }
 
 @Component({

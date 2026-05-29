@@ -25,7 +25,7 @@ interface RegisterStep {
 interface RegisterProduct {
   key: string;
   label: string;
-  description: string;
+  description?: string;
 }
 
 const REGISTER_STEPS: RegisterStep[] = [
@@ -39,27 +39,30 @@ const REGISTER_PRODUCTS: RegisterProduct[] = [
   {
     key: 'credit',
     label: 'Thẻ tín dụng',
-    description: 'Cấp hạn mức tín dụng và chi tiêu trước, thanh toán sau.',
+    description: 'Thẻ tín dụng là công cụ cho phép bạn chi tiêu trước, thanh toán sau trong hạn mức được cấp',
   },
   {
     key: 'debit',
     label: 'Thẻ ghi nợ',
-    description: 'Chi tiêu trực tiếp từ số dư tài khoản thanh toán của bạn.',
+    description: 'Thẻ ghi nợ cho phép bạn chi tiêu trực tiếp từ số tiền có sẵn trong tài khoản',
   },
   {
     key: 'loan',
     label: 'Vay',
-    description: 'Giải pháp vay tiêu dùng hoặc vay phục vụ kế hoạch tài chính cá nhân.',
+    description: '',
+    // description: 'Giải pháp vay tiêu dùng hoặc vay phục vụ kế hoạch tài chính cá nhân.',
   },
   {
     key: 'insurance',
     label: 'Bảo hiểm',
-    description: 'Bảo vệ tài chính với các gói bảo hiểm sức khỏe và nhân thọ.',
+    description: '',
+    // description: 'Bảo vệ tài chính với các gói bảo hiểm sức khỏe và nhân thọ.',
   },
   {
     key: 'investment',
     label: 'Đầu tư',
-    description: 'Đầu tư tích lũy với các sản phẩm quỹ và kênh đầu tư linh hoạt.',
+    description: '',
+    // description: 'Đầu tư tích lũy với các sản phẩm quỹ và kênh đầu tư linh hoạt.',
   },
 ];
 
@@ -91,10 +94,11 @@ export class RegisterPage {
     fullName: '',
     phone: '',
     email: '',
-    birthDate: '',
-    income: '',
-    occupation: '',
-    incomeSource: '',
+    monthlyIncome: '',
+    creditLimit: '',
+    cardReceiveMethod: '',
+    loanAmount: '',
+    loanTerm: '',
     loanPurpose: '',
   });
   protected readonly selectedDay = signal('');
@@ -226,25 +230,35 @@ export class RegisterPage {
       value.fullName.trim().length > 0 &&
       value.phone.trim().length > 0 &&
       value.email.trim().length > 0 &&
-      value.birthDate.trim().length > 0;
+      value.monthlyIncome.trim().length > 0;
 
     if (!hasBaseInfo) {
       return false;
     }
 
-    const needsFinancialInfo =
-      this.selectedProductKeys().includes('loan') || this.selectedProductKeys().includes('credit');
+    const hasCreditProduct = this.selectedProductKeys().includes('credit');
+    const hasLoanProduct = this.selectedProductKeys().includes('loan');
 
-    if (!needsFinancialInfo) {
-      return true;
+    if (hasCreditProduct) {
+      const hasCreditInfo = value.creditLimit.trim().length > 0 && value.cardReceiveMethod.trim().length > 0;
+
+      if (!hasCreditInfo) {
+        return false;
+      }
     }
 
-    return (
-      value.income.trim().length > 0 &&
-      value.occupation.trim().length > 0 &&
-      value.incomeSource.trim().length > 0 &&
-      value.loanPurpose.trim().length > 0
-    );
+    if (hasLoanProduct) {
+      const hasLoanInfo =
+        value.loanAmount.trim().length > 0 &&
+        value.loanTerm.trim().length > 0 &&
+        value.loanPurpose.trim().length > 0;
+
+      if (!hasLoanInfo) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   private async submitRegistration(): Promise<void> {

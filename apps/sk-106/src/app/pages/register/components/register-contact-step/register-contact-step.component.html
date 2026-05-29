@@ -1,10 +1,9 @@
 <section class="step-block">
-  <h2 class="step-title">Thông tin chung</h2>
-  <p class="step-subtitle">Nhập thông tin liên hệ và một số dữ liệu bổ sung theo sản phẩm đã chọn.</p>
-
+  <h2 class="title_medium">Thông tin chung</h2>
+  <p class="body_medium_medium">Hoàn tất thông tin trong vài bước đơn giản để được liên hệ ngay</p>
   <div class="group">
-    <h3>Thông tin liên hệ</h3>
-    <div class="grid two-col">
+    <p class="body_medium_medium">Thông tin liên hệ</p>
+    <div class="grid mt-2 two-col">
       <app-text-input
         [label]="'Họ và tên'"
         [placeholder]="'Vũ Thanh Nga'"
@@ -32,63 +31,112 @@
         [requiredErrorMessage]="'Vui lòng nhập email'"
         (valueChange)="updateField('email', $event)"
       />
-      <app-text-input
-        [label]="'Ngày sinh'"
-        [placeholder]="'DD/MM/YYYY'"
-        [required]="true"
-        [submitted]="submitted()"
-        [value]="contactValue().birthDate"
-        [requiredErrorMessage]="'Vui lòng nhập ngày sinh'"
-        (valueChange)="updateField('birthDate', $event)"
-      />
+      <label class="select-field">
+        <span class="select-field__label">
+          Thu nhập hàng tháng
+          <span class="select-field__required" aria-hidden="true">*</span>
+        </span>
+        <select
+          class="select-field__control"
+          [class.select-field__control--invalid]="submitted() && !contactValue().monthlyIncome.trim()"
+          [value]="contactValue().monthlyIncome"
+          (change)="updateField('monthlyIncome', $any($event.target).value)"
+        >
+          <option value="" disabled>Chọn mức thu nhập</option>
+          @for (option of monthlyIncomeOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+        @if (submitted() && !contactValue().monthlyIncome.trim()) {
+          <span class="select-field__error" role="alert">Vui lòng chọn mức thu nhập</span>
+        }
+      </label>
     </div>
   </div>
 
-  @if (needsFinancialInfo()) {
+  @if (hasCreditProduct()) {
     <div class="group">
-      <h3>Thông tin tài chính</h3>
-      <div class="grid two-col">
+      <p class="body_medium_medium">Thông tin thẻ tín dụng</p>
+      <div class="grid two-col mt-2">
         <app-text-input
-          [label]="'Thu nhập trung bình/tháng'"
-          [placeholder]="'VNĐ'"
+          [label]="'Hạn mức thẻ đề nghị'"
+          [placeholder]="'Nhập số tiền'"
           [required]="true"
           [submitted]="submitted()"
-          [value]="contactValue().income"
-          [requiredErrorMessage]="'Vui lòng nhập thu nhập'"
-          (valueChange)="updateField('income', $event)"
+          [value]="contactValue().creditLimit"
+          [inputmode]="'numeric'"
+          [requiredErrorMessage]="'Vui lòng nhập hạn mức thẻ đề nghị'"
+          (valueChange)="updateField('creditLimit', $event)"
         />
-        <app-text-input
-          [label]="'Nghề nghiệp'"
-          [placeholder]="'Nhập thông tin'"
-          [required]="true"
-          [submitted]="submitted()"
-          [value]="contactValue().occupation"
-          [requiredErrorMessage]="'Vui lòng nhập nghề nghiệp'"
-          (valueChange)="updateField('occupation', $event)"
-        />
-        <app-text-input
-          [label]="'Nguồn thu nhập chính'"
-          [placeholder]="'Nhập mô tả'"
-          [required]="true"
-          [submitted]="submitted()"
-          [value]="contactValue().incomeSource"
-          [requiredErrorMessage]="'Vui lòng nhập nguồn thu nhập'"
-          (valueChange)="updateField('incomeSource', $event)"
-        />
-        <app-text-input
-          [label]="'Mục đích sử dụng vốn'"
-          [placeholder]="'Chọn mục đích'"
-          [required]="true"
-          [submitted]="submitted()"
-          [value]="contactValue().loanPurpose"
-          [requiredErrorMessage]="'Vui lòng nhập mục đích sử dụng vốn'"
-          (valueChange)="updateField('loanPurpose', $event)"
-        />
+        <label class="select-field">
+          <span class="select-field__label">
+            Phương thức nhận Thẻ/PIN
+            <span class="select-field__required" aria-hidden="true">*</span>
+          </span>
+          <select
+            class="select-field__control"
+            [class.select-field__control--invalid]="submitted() && !contactValue().cardReceiveMethod.trim()"
+            [value]="contactValue().cardReceiveMethod"
+            (change)="updateField('cardReceiveMethod', $any($event.target).value)"
+          >
+            <option value="" disabled>Chọn phương thức nhận thẻ</option>
+            @for (option of cardReceiveMethodOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+          @if (submitted() && !contactValue().cardReceiveMethod.trim()) {
+            <span class="select-field__error" role="alert">Vui lòng chọn phương thức nhận thẻ</span>
+          }
+        </label>
       </div>
     </div>
   }
 
-  @if (selectedProductKeys().includes('insurance')) {
-    <p class="tip">Bạn đã chọn Bảo hiểm: vui lòng chuẩn bị thêm thông tin người thụ hưởng ở bước xác nhận.</p>
+  @if (hasLoanProduct()) {
+    <div class="group">
+      <p class="body_medium_medium">Thông tin khoản vay</p>
+      <div class="grid two-col mt-2">
+        <app-text-input
+          [label]="'Số tiền đề nghị cấp tín dụng (VND)'"
+          [placeholder]="'Nhập số tiền'"
+          [required]="true"
+          [submitted]="submitted()"
+          [value]="contactValue().loanAmount"
+          [inputmode]="'numeric'"
+          [requiredErrorMessage]="'Vui lòng nhập số tiền đề nghị cấp tín dụng'"
+          (valueChange)="updateField('loanAmount', $event)"
+        />
+        <app-text-input
+          [label]="'Thời hạn (<=240 tháng)'"
+          [placeholder]="'Nhập số tháng'"
+          [required]="true"
+          [submitted]="submitted()"
+          [value]="contactValue().loanTerm"
+          [inputmode]="'numeric'"
+          [requiredErrorMessage]="'Vui lòng nhập thời hạn khoản vay'"
+          (valueChange)="updateField('loanTerm', $event)"
+        />
+        <label class="select-field select-field--span-2">
+          <span class="select-field__label">
+            Mục đích cấp tín dụng
+            <span class="select-field__required" aria-hidden="true">*</span>
+          </span>
+          <select
+            class="select-field__control"
+            [class.select-field__control--invalid]="submitted() && !contactValue().loanPurpose.trim()"
+            [value]="contactValue().loanPurpose"
+            (change)="updateField('loanPurpose', $any($event.target).value)"
+          >
+            <option value="" disabled>Chọn mục đích cấp tín dụng</option>
+            @for (option of loanPurposeOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+          @if (submitted() && !contactValue().loanPurpose.trim()) {
+            <span class="select-field__error" role="alert">Vui lòng chọn mục đích cấp tín dụng</span>
+          }
+        </label>
+      </div>
+    </div>
   }
 </section>
