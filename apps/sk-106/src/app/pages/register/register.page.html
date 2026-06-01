@@ -5,7 +5,8 @@
       <button type="button" class="stepper-item" [class.stepper-item--active]="isStepActive(i)"
         [class.stepper-item--done]="isStepDone(i)" [disabled]="!isStepReachable(i)" (click)="goToStep(i)">
         <span class="stepper-item__icon">
-          <app-icon [color]="isStepActive(i) ? '#fff' : '#939393'" [name]="step.icon" [size]="24" alt="" />
+          <app-icon [color]="isStepDone(i) ? '' : isStepActive(i) ? '#fff' : '#939393'" [name]="isStepDone(i) ? 'ic_check_circle_fill' : step.icon" [size]="24"
+            alt="" />
         </span>
         <span class="stepper-item__label">{{ step.label }}</span>
       </button>

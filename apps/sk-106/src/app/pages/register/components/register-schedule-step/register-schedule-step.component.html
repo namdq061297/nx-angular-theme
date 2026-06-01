@@ -1,11 +1,11 @@
 <section class="step-block">
-  <h2 class="title_medium">Lịch hẹn</h2>
-  <p class="body_medium_medium">Chọn ngày và khung giờ tư vấn phù hợp cho các sản phẩm đã đăng ký.</p>
+  <h2 class="title_medium">Chọn lịch hẹn</h2>
+  <p class="body_medium_medium">Quý khách vui lòng lựa chọn địa điểm và thời gian giao dịch mong muốn để được ưu tiên phục vụ</p>
 
   <div class="panel">
     <div class="form-grid">
       <label class="field">
-        <span class="field__label">Hình thức tư vấn <span class="required">*</span></span>
+        <span class="body_medium_medium panel-title">Hình thức tư vấn <span class="required">*</span></span>
         <select
           class="field__control"
           [class.field__control--invalid]="submitted() && !selectedConsultMethod().trim()"
@@ -20,7 +20,7 @@
       </label>
 
       <label class="field">
-        <span class="field__label">Ngày nhận tư vấn <span class="required">*</span></span>
+        <span class="body_medium_medium panel-title">Ngày nhận tư vấn <span class="required">*</span></span>
         <input
           class="field__control"
           [class.field__control--invalid]="submitted() && !selectedDay().trim()"
@@ -31,7 +31,7 @@
       </label>
     </div>
 
-    <p class="body_medium_medium panel-title">Khung giờ nhận tư vấn <span class="required">*</span></p>
+    <p class="body_medium_medium panel-title mt-5">Khung giờ nhận tư vấn <span class="required">*</span></p>
     <div class="chip-list">
       @for (slot of availableSlots; track slot) {
         <button type="button" class="chip" [class.chip--active]="selectedSlot() === slot" (click)="selectSlot(slot)">
