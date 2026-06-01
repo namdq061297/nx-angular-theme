@@ -5,10 +5,14 @@
 .shell-header {
   display: flex;
   align-items: center;
-  padding: 16px 24px;
+  padding: 16px 80px;
   background: var(--color-bg-app-default);
   justify-content: space-between;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.08);
+}
+
+.header-left {
+  cursor: pointer;
 }
 
 .header-left,
@@ -106,10 +110,6 @@ app-button.logout-btn::ng-deep .app-button.secondary-grey:not(:disabled):hover {
   color: var(--color-text-inverse);
   background: var(--color-bg-brand-primary-solid);
   border-color: var(--color-border-primary);
-}
-
-.shell-content {
-  // padding: 0 16px 24px;
 }
 
 @media (max-width: 768px) {

@@ -1,7 +1,7 @@
 <div class="shell">
-  <header class="shell-header">
+  <header class="shell-header" [style.background]="backgroundStyle">
     <div class="header-left">
-      <h1 class="brand">
+      <h1 (click)="goHome()" class="brand">
         <app-icon name="ic_logo_full" [height]="50" [width]="130" alt="VCB" />
       </h1>
     </div>
