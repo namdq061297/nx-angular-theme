@@ -30,7 +30,8 @@
       }
       @case ('schedule') {
       <app-register-schedule-step [selectedProductKeys]="selectedProductKeys()" [selectedDay]="selectedDay()"
-        [selectedSlot]="selectedSlot()" [submitted]="isStepSubmitted('schedule')"
+        [selectedSlot]="selectedSlot()" [selectedConsultMethod]="selectedConsultMethod()"
+        [submitted]="isStepSubmitted('schedule')" (consultMethodChanged)="updateSelectedConsultMethod($event)"
         (dayChanged)="updateSelectedDay($event)" (slotChanged)="updateSelectedSlot($event)" />
       }
       @case ('confirm') {

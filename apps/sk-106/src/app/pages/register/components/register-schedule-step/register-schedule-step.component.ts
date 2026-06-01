@@ -9,15 +9,33 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 })
 export class RegisterScheduleStepComponent {
   readonly selectedProductKeys = input.required<ReadonlyArray<string>>();
+  readonly selectedConsultMethod = input('');
   readonly selectedDay = input('');
   readonly selectedSlot = input('');
   readonly submitted = input(false);
 
+  readonly consultMethodChanged = output<string>();
   readonly dayChanged = output<string>();
   readonly slotChanged = output<string>();
 
-  protected readonly availableDays = ['Hôm nay', 'Ngày mai', 'Thứ 6', 'Thứ 7'];
-  protected readonly availableSlots = ['09:00 - 09:30', '13:30 - 14:00', '15:30 - 16:00', '19:30 - 20:00'];
+  protected readonly availableConsultMethods = [
+    { label: 'Tại quầy', value: 'counter' },
+    { label: 'Qua hotline', value: 'hotline' },
+  ] as const;
+  protected readonly availableSlots = [
+    '08:00 - 09:00',
+    '09:00 - 10:00',
+    '10:00 - 11:00',
+    '11:00 - 12:00',
+    '13:00 - 14:00',
+    '14:00 - 15:00',
+    '15:00 - 16:00',
+    '16:00 - 17:00',
+  ];
+
+  protected selectConsultMethod(value: string): void {
+    this.consultMethodChanged.emit(value);
+  }
 
   protected selectDay(value: string): void {
     this.dayChanged.emit(value);

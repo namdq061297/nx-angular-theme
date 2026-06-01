@@ -1,41 +1,48 @@
 <section class="step-block">
-  <h2 class="step-title">Lịch hẹn</h2>
-  <p class="step-subtitle">Chọn ngày và khung giờ tư vấn phù hợp cho các sản phẩm đã đăng ký.</p>
+  <h2 class="title_medium">Lịch hẹn</h2>
+  <p class="body_medium_medium">Chọn ngày và khung giờ tư vấn phù hợp cho các sản phẩm đã đăng ký.</p>
 
   <div class="panel">
-    <h3>Ngày hẹn</h3>
-    <div class="chip-list">
-      @for (day of availableDays; track day) {
-        <button
-          type="button"
-          class="chip"
-          [class.chip--active]="selectedDay() === day"
-          (click)="selectDay(day)"
+    <div class="form-grid">
+      <label class="field">
+        <span class="field__label">Hình thức tư vấn <span class="required">*</span></span>
+        <select
+          class="field__control"
+          [class.field__control--invalid]="submitted() && !selectedConsultMethod().trim()"
+          [value]="selectedConsultMethod()"
+          (change)="selectConsultMethod($any($event.target).value)"
         >
-          {{ day }}
-        </button>
-      }
-    </div>
-  </div>
+          <option value="" disabled>- Chọn hình thức tư vấn -</option>
+          @for (method of availableConsultMethods; track method.value) {
+            <option [value]="method.value">{{ method.label }}</option>
+          }
+        </select>
+      </label>
 
-  <div class="panel">
-    <h3>Khung giờ</h3>
+      <label class="field">
+        <span class="field__label">Ngày nhận tư vấn <span class="required">*</span></span>
+        <input
+          class="field__control"
+          [class.field__control--invalid]="submitted() && !selectedDay().trim()"
+          type="date"
+          [value]="selectedDay()"
+          (input)="selectDay($any($event.target).value)"
+        />
+      </label>
+    </div>
+
+    <p class="body_medium_medium panel-title">Khung giờ nhận tư vấn <span class="required">*</span></p>
     <div class="chip-list">
       @for (slot of availableSlots; track slot) {
-        <button
-          type="button"
-          class="chip"
-          [class.chip--active]="selectedSlot() === slot"
-          (click)="selectSlot(slot)"
-        >
+        <button type="button" class="chip" [class.chip--active]="selectedSlot() === slot" (click)="selectSlot(slot)">
           {{ slot }}
         </button>
       }
     </div>
   </div>
 
-  @if (submitted() && (!selectedDay() || !selectedSlot())) {
-    <p class="error">Vui lòng chọn đầy đủ ngày hẹn và khung giờ tư vấn.</p>
+  @if (submitted() && (!selectedConsultMethod() || !selectedDay() || !selectedSlot())) {
+    <p class="error">Vui lòng chọn đầy đủ hình thức, ngày và khung giờ tư vấn.</p>
   }
 
   <p class="note">Sản phẩm đã chọn: {{ selectedProductKeys().length }} mục.</p>
