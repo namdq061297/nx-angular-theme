@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  output,
+  signal,
+  CUSTOM_ELEMENTS_SCHEMA,
+} from '@angular/core';
 import { TextInputComponent } from '../../../../shared/components/text-input/text-input.component';
 import 'iconify-icon';
 
@@ -53,7 +61,7 @@ export class RegisterScheduleStepComponent {
       name: 'Chi nhánh Hoàn Kiếm - Trụ sở chi nhánh',
       address: '23 Phan Chu Trinh, phường Phan Chu Trinh, quận Hoàn Kiếm, thành phố Hà Nội',
     },
-     {
+    {
       name: 'Chi nhánh Ba Đình - Trụ sở chi nhánh',
       address: 'Số 72 đường Trần Hưng Đạo, phường Trần Hưng Đạo, quận Hoàn Kiếm, thành phố Hà Nội',
     },
@@ -133,5 +141,12 @@ export class RegisterScheduleStepComponent {
 
   protected selectSlot(value: string): void {
     this.slotChanged.emit(value);
+  }
+
+  protected openDatePicker(input: HTMLInputElement): void {
+    const dateInput = input as HTMLInputElement & { showPicker?: () => void };
+    if (dateInput.showPicker) {
+      dateInput.showPicker();
+    }
   }
 }

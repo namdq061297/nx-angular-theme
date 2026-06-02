@@ -10,8 +10,7 @@
       <div class="droplist" [class.droplist--open]="transactionPointDropdownOpen()">
         <button type="button" class="droplist__trigger"
           [class.droplist__trigger--invalid]="submitted() && !selectedTransactionPoint()"
-          [class.droplist__trigger--selected]="!!selectedTransactionPoint()"
-          (click)="toggleTransactionPointDropdown()">
+          [class.droplist__trigger--selected]="!!selectedTransactionPoint()" (click)="toggleTransactionPointDropdown()">
           <span class="droplist__trigger-text">
             {{ selectedTransactionPoint()?.name || '- Chọn Điểm giao dịch -' }}
           </span>
@@ -28,7 +27,7 @@
           </span>
         </button>
         @if (selectedTransactionPoint()) {
-          <p class="selected-point-address">Địa chỉ: {{ selectedTransactionPoint()?.address }}</p>
+        <p class="selected-point-address">Địa chỉ: {{ selectedTransactionPoint()?.address }}</p>
         }
         @if (transactionPointDropdownOpen()) {
         <div class="droplist__menu">
@@ -61,7 +60,8 @@
       <label class="field">
         <span class="body_medium_medium panel-title">Hình thức tư vấn <span class="required">*</span></span>
         <select class="field__control" [class.field__control--invalid]="submitted() && !selectedConsultMethod().trim()"
-          [value]="selectedConsultMethod()" (change)="selectConsultMethod($any($event.target).value)">
+          [class.field__control--placeholder]="!selectedConsultMethod().trim()" [value]="selectedConsultMethod()"
+          (change)="selectConsultMethod($any($event.target).value)">
           <option value="" disabled>- Chọn hình thức tư vấn -</option>
           @for (method of availableConsultMethods; track method.value) {
           <option [value]="method.value">{{ method.label }}</option>
@@ -71,8 +71,12 @@
 
       <label class="field">
         <span class="body_medium_medium panel-title">Ngày nhận tư vấn <span class="required">*</span></span>
-        <input class="field__control" [class.field__control--invalid]="submitted() && !selectedDay().trim()" type="date"
-          [value]="selectedDay()" (input)="selectDay($any($event.target).value)" />
+        <!-- <input class="field__control" [class.field__control--invalid]="submitted() && !selectedDay().trim()" type="date"
+          [value]="selectedDay()" (input)="selectDay($any($event.target).value)" /> -->
+        <input #consultDateInput class="field__control"
+          [class.field__control--invalid]="submitted() && !selectedDay().trim()" type="date" [value]="selectedDay()"
+          (input)="selectDay($any($event.target).value)" (click)="openDatePicker(consultDateInput)"
+          (focus)="openDatePicker(consultDateInput)" />
       </label>
     </div>
 

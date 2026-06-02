@@ -212,6 +212,10 @@
   padding: 0 12px;
 }
 
+.field__control--placeholder {
+  color: var(--color-text-placeholder, #717680);
+}
+
 .field__control--invalid {
   border-color: var(--color-border-error-subtle);
 }
