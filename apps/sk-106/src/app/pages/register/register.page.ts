@@ -10,7 +10,10 @@ import {
   RegisterContactStepComponent,
 } from './components/register-contact-step/register-contact-step.component';
 import { RegisterProductsStepComponent } from './components/register-products-step/register-products-step.component';
-import { RegisterScheduleStepComponent } from './components/register-schedule-step/register-schedule-step.component';
+import {
+  RegisterScheduleStepComponent,
+  TransactionPoint,
+} from './components/register-schedule-step/register-schedule-step.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import type { IconName } from '@icons';
 
@@ -102,7 +105,7 @@ export class RegisterPage {
     loanPurpose: '',
   });
   protected readonly selectedConsultMethod = signal('');
-  protected readonly selectedTransactionPoint = signal('');
+  protected readonly selectedTransactionPoint = signal<TransactionPoint | null>(null);
   protected readonly selectedDay = signal('');
   protected readonly selectedSlot = signal('');
   protected readonly acceptedTerms = signal(false);
@@ -140,7 +143,7 @@ export class RegisterPage {
     this.selectedDay.set(value);
   }
 
-  protected updateSelectedTransactionPoint(value: string): void {
+  protected updateSelectedTransactionPoint(value: TransactionPoint | null): void {
     this.selectedTransactionPoint.set(value);
   }
 
@@ -225,7 +228,7 @@ export class RegisterPage {
 
     if (stepKey === 'schedule') {
       return (
-        Boolean(this.selectedTransactionPoint().trim()) &&
+        Boolean(this.selectedTransactionPoint()) &&
         Boolean(this.selectedConsultMethod().trim()) &&
         Boolean(this.selectedDay().trim()) &&
         Boolean(this.selectedSlot().trim())

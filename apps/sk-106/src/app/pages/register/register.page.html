@@ -63,7 +63,7 @@
           @case ('confirm') {
             <app-register-confirm-step
               [selectedProductLabels]="selectedProductLabels()"
-              [selectedTransactionPoint]="selectedTransactionPoint()"
+              [selectedTransactionPoint]="selectedTransactionPoint()?.name || ''"
               [selectedConsultMethod]="selectedConsultMethod()"
               [selectedDay]="selectedDay()"
               [selectedSlot]="selectedSlot()"

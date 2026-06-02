@@ -9,24 +9,27 @@
 
       <div class="droplist" [class.droplist--open]="transactionPointDropdownOpen()">
         <button type="button" class="droplist__trigger"
-          [class.droplist__trigger--invalid]="submitted() && !selectedTransactionPoint().trim()"
-          [class.droplist__trigger--selected]="selectedTransactionPoint().trim().length > 0"
+          [class.droplist__trigger--invalid]="submitted() && !selectedTransactionPoint()"
+          [class.droplist__trigger--selected]="!!selectedTransactionPoint()"
           (click)="toggleTransactionPointDropdown()">
           <span class="droplist__trigger-text">
-            {{ selectedTransactionPoint().trim().length > 0 ? selectedTransactionPoint() : '- Chọn Điểm giao dịch -' }}
+            {{ selectedTransactionPoint()?.name || '- Chọn Điểm giao dịch -' }}
           </span>
 
           <span class="droplist__trigger-actions">
-            @if (selectedTransactionPoint().trim().length > 0) {
+            @if (selectedTransactionPoint()) {
             <span class="droplist__clear" role="button" tabindex="0" aria-label="Xóa điểm giao dịch"
               (click)="clearSelectedTransactionPoint($event)">
               <iconify-icon icon="carbon:close-filled" width="20" height="20"></iconify-icon>
             </span>
             }
-            <iconify-icon [style.color]="'var(--color-text-brand-primary)'"icon="solar:filter-broken" width="20" height="20"></iconify-icon>
+            <iconify-icon [style.color]="'var(--color-text-brand-primary)'" icon="solar:filter-broken" width="20"
+              height="20"></iconify-icon>
           </span>
         </button>
-
+        @if (selectedTransactionPoint()) {
+          <p class="selected-point-address">Địa chỉ: {{ selectedTransactionPoint()?.address }}</p>
+        }
         @if (transactionPointDropdownOpen()) {
         <div class="droplist__menu">
           <app-text-input class="m-2" [isSearch]="true" [label]="''" [value]="transactionPointSearchValue()"

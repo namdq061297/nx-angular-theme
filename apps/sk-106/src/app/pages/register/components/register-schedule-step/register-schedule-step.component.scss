@@ -91,9 +91,10 @@
   background: var(--color-bg-surface-primary);
   box-shadow: 0 8px 20px rgba(16, 24, 40, 0.08);
   display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
   gap: 8px;
-  max-height: 290px;
-  overflow: scroll;
+  max-height: 400px;
+  overflow: hidden;
 }
 
 .droplist__search-wrap {
@@ -104,6 +105,13 @@
   border-radius: 8px;
   padding: 0 10px;
   min-height: 36px;
+}
+
+.selected-point-address {
+  color: var(--color-text-brand-primary);
+  font-size: var(--font-size-14);
+  margin: 8px 4px;
+  font-weight: 500;
 }
 
 .droplist__search-icon {
@@ -133,7 +141,9 @@
 }
 
 .droplist__list {
-  overflow: auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: grid;
   gap: 2px;
 }
