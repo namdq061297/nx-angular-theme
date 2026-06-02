@@ -25,6 +25,151 @@
   gap: 10px;
 }
 
+.droplist {
+  position: relative;
+}
+
+.droplist__trigger {
+  width: 100%;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-primary-brand);
+  background: var(--color-bg-surface-primary);
+  color: var(--color-text-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 10px 0 12px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.droplist__trigger--selected {
+  color: var(--color-text-default);
+}
+
+.droplist__trigger--invalid {
+  border-color: var(--color-border-error-subtle);
+}
+
+.droplist__trigger-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.droplist__trigger-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.droplist__clear {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-bg-disable);
+  color: var(--color-text-subtle);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.droplist__caret {
+  color: var(--color-text-subtle);
+  font-size: 12px;
+}
+
+.droplist__menu {
+  margin-top: 8px;
+  border: 1px solid var(--color-border-disable-subtle);
+  border-radius: 10px;
+  background: var(--color-bg-surface-primary);
+  box-shadow: 0 8px 20px rgba(16, 24, 40, 0.08);
+  display: grid;
+  gap: 8px;
+  max-height: 290px;
+  overflow: scroll;
+}
+
+.droplist__search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--color-border-disable-subtle);
+  border-radius: 8px;
+  padding: 0 10px;
+  min-height: 36px;
+}
+
+.droplist__search-icon {
+  color: var(--color-text-subtle);
+  font-size: 13px;
+}
+
+.droplist__search {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  min-height: 34px;
+  color: var(--color-text-default);
+  font-size: var(--font-size-14);
+  background: transparent;
+}
+
+.droplist__reset {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  color: var(--color-text-subtle);
+  font-size: var(--font-size-14);
+  padding: 0px 10px;
+  cursor: pointer;
+}
+
+.droplist__list {
+  overflow: auto;
+  display: grid;
+  gap: 2px;
+}
+
+.droplist__item {
+  border: 0;
+  text-align: left;
+  background: transparent;
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.droplist__item:hover {
+  background: var(--color-gray-200);
+}
+
+.droplist__item-name {
+  color: var(--color-text-default);
+  font-size: var(--font-size-14);
+  font-weight: 600;
+}
+
+.droplist__item-address {
+  color: var(--color-text-subtle);
+  font-size: var(--font-size-12);
+}
+
+.droplist__empty {
+  margin: 0;
+  padding: 12px 8px;
+  color: var(--color-text-subtle);
+  font-size: var(--font-size-14);
+}
+
 .form-grid {
   display: grid;
   gap: 12px;

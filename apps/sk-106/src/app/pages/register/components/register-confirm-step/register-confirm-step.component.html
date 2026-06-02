@@ -13,6 +13,8 @@
 
   <div class="summary">
     <h3>Lịch hẹn đã chọn</h3>
+    <p class="line">Điểm giao dịch: {{ selectedTransactionPoint() || 'Chưa chọn' }}</p>
+    <p class="line">Hình thức tư vấn: {{ selectedConsultMethod() || 'Chưa chọn' }}</p>
     <p class="line">Ngày hẹn: {{ selectedDay() }}</p>
     <p class="line">Khung giờ: {{ selectedSlot() }}</p>
   </div>

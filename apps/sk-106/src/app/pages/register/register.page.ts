@@ -102,6 +102,7 @@ export class RegisterPage {
     loanPurpose: '',
   });
   protected readonly selectedConsultMethod = signal('');
+  protected readonly selectedTransactionPoint = signal('');
   protected readonly selectedDay = signal('');
   protected readonly selectedSlot = signal('');
   protected readonly acceptedTerms = signal(false);
@@ -137,6 +138,10 @@ export class RegisterPage {
 
   protected updateSelectedDay(value: string): void {
     this.selectedDay.set(value);
+  }
+
+  protected updateSelectedTransactionPoint(value: string): void {
+    this.selectedTransactionPoint.set(value);
   }
 
   protected updateSelectedConsultMethod(value: string): void {
@@ -220,6 +225,7 @@ export class RegisterPage {
 
     if (stepKey === 'schedule') {
       return (
+        Boolean(this.selectedTransactionPoint().trim()) &&
         Boolean(this.selectedConsultMethod().trim()) &&
         Boolean(this.selectedDay().trim()) &&
         Boolean(this.selectedSlot().trim())
@@ -275,6 +281,7 @@ export class RegisterPage {
       products: this.selectedProductKeys(),
       contact: this.contactForm(),
       schedule: {
+        transactionPoint: this.selectedTransactionPoint(),
         method: this.selectedConsultMethod(),
         day: this.selectedDay(),
         slot: this.selectedSlot(),

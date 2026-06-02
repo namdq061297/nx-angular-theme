@@ -9,6 +9,8 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 })
 export class RegisterConfirmStepComponent {
   readonly selectedProductLabels = input.required<ReadonlyArray<string>>();
+  readonly selectedTransactionPoint = input('');
+  readonly selectedConsultMethod = input('');
   readonly selectedDay = input('');
   readonly selectedSlot = input('');
   readonly acceptedTerms = input(false);
