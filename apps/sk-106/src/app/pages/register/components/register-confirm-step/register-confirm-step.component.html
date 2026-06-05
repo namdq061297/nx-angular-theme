@@ -84,7 +84,7 @@
     </div>
   </div>
 
-  <label class="agree-row">
+  <label class="agree-row items-center">
     <app-toggle
       [checked]="isUploadDoc()"
       ariaLabel="Bật tắt tải hồ sơ tổ chức bản mềm"
@@ -94,7 +94,7 @@
       tải hồ sơ không yêu cầu bắt buộc)</span>
   </label>
 
-  <label class="agree-row">
+  <label class="agree-row items-start">
     @if (acceptedTerms()) {
     <button type="button" class="agree-check-btn" (click)="onTermsChange(!acceptedTerms())">
       <app-icon name="ic_check_square" [width]="20" [height]="20"></app-icon>
@@ -111,7 +111,7 @@
       mật, bảo đảm an toàn an ninh thông tin</span>
   </label>
 
-  <label class="agree-row">
+  <label class="agree-row items-start">
     @if (acceptedPolicy()) {
     <button type="button" class="agree-check-btn" (click)="onPolicyChange(!acceptedPolicy())">
       <app-icon name="ic_check_square" [width]="20" [height]="20"></app-icon>
