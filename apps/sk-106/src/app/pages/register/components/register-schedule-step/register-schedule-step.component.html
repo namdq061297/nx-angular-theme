@@ -19,7 +19,7 @@
             @if (selectedTransactionPoint()) {
             <span class="droplist__clear" role="button" tabindex="0" aria-label="Xóa điểm giao dịch"
               (click)="clearSelectedTransactionPoint($event)">
-              <iconify-icon icon="carbon:close-filled" width="20" height="20"></iconify-icon>
+              <iconify-icon [style.color]="'var(--color-fg-quaternary)'"  icon="carbon:close-filled" width="20" height="20"></iconify-icon>
             </span>
             }
             <iconify-icon [style.color]="'var(--color-text-brand-primary)'" icon="solar:filter-broken" width="20"

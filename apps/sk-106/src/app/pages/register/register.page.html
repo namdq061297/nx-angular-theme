@@ -62,8 +62,10 @@
           }
           @case ('confirm') {
             <app-register-confirm-step
-              [selectedProductLabels]="selectedProductLabels()"
-              [selectedTransactionPoint]="selectedTransactionPoint()?.name || ''"
+              [selectedProducts]="selectedProductsForConfirm()"
+              [contactValue]="contactForm()"
+              [selectedTransactionPointName]="selectedTransactionPoint()?.name || ''"
+              [selectedTransactionPointAddress]="selectedTransactionPoint()?.address || ''"
               [selectedConsultMethod]="selectedConsultMethod()"
               [selectedDay]="selectedDay()"
               [selectedSlot]="selectedSlot()"

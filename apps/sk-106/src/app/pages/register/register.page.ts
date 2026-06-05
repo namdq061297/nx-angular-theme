@@ -3,7 +3,10 @@ import 'iconify-icon';
 import { Router } from '@angular/router';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
-import { RegisterConfirmStepComponent } from './components/register-confirm-step/register-confirm-step.component';
+import {
+  ConfirmProductItem,
+  RegisterConfirmStepComponent,
+} from './components/register-confirm-step/register-confirm-step.component';
 import {
   ContactFieldKey,
   ContactFormValue,
@@ -124,6 +127,12 @@ export class RegisterPage {
   protected readonly selectedProductLabels = computed(() => {
     const selected = this.selectedProductKeys();
     return this.products.filter((product) => selected.includes(product.key)).map((product) => product.label);
+  });
+  protected readonly selectedProductsForConfirm = computed<ReadonlyArray<ConfirmProductItem>>(() => {
+    const selected = this.selectedProductKeys();
+    return this.products
+      .filter((product) => selected.includes(product.key))
+      .map((product) => ({ key: product.key, label: product.label }));
   });
   protected readonly canContinue = computed(() => {
     return this.isCurrentStepValid();
