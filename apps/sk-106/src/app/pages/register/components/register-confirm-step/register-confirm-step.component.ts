@@ -31,14 +31,14 @@ export class RegisterConfirmStepComponent {
   readonly acceptedTermsChanged = output<boolean>();
   readonly acceptedPolicyChanged = output<boolean>();
 
-  protected onTermsChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.acceptedTermsChanged.emit(target.checked);
+  protected onTermsChange(val: boolean): void {
+    console.log('Terms changed:', val);
+    this.acceptedTermsChanged.emit(val);
   }
 
-  protected onPolicyChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.acceptedPolicyChanged.emit(target.checked);
+  protected onPolicyChange(val: boolean): void {
+    console.log('Policy changed:', val);
+    this.acceptedPolicyChanged.emit(val);
   }
 
   protected formatCurrency(value: string): string {

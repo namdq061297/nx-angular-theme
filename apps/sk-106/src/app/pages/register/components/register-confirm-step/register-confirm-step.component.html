@@ -8,7 +8,12 @@
       @for (product of selectedProducts(); track product.key) {
         <article class="service-item">
           <div class="flex gap-2 items-center">
-            <app-icon class="service-item__icon" [width]="32" [height]="32" [name]="getProductIcon(product.key)" />
+            <app-icon
+              class="service-item__icon"
+              [width]="32"
+              [height]="32"
+              [name]="getProductIcon(product.key)"
+            />
             <h4 class="service-item__title">{{ product.label }}</h4>
           </div>
 
@@ -85,13 +90,39 @@
   </div>
 
   <label class="agree-row">
-    <input type="checkbox" [checked]="acceptedTerms()" (change)="onTermsChange($event)" />
-    <span>Tôi xác nhận thông tin đã cung cấp là chính xác.</span>
+    @if(acceptedTerms()){
+      <button type="button" class="agree-check-btn" (click)="onTermsChange(!acceptedTerms())">
+        <app-icon name="ic_check_square" [width]="20" [height]="20"></app-icon>
+      </button>
+    } @else {
+      <button type="button" class="agree-check-btn" (click)="onTermsChange(!acceptedTerms())">
+       <div class="unchecked-icon"></div>
+      </button>
+    }
+    <span
+      >Cho phép Vietcombank xử lý dữ liệu cá nhân theo Các điều kiện giao dịch chung về bảo vệ
+      dữ liệu cá nhân để cập nhật thông tin của Quý khách tại Vietcombank. Bảo vệ thông tin của Quý
+      khách tại Vietcombank là ưu tiên hàng đầu của chúng tôi. Tuân thủ Luật bảo vệ cá nhân số
+      91/2025/QH1, mọi thông tin Quý khách cung cấp cho Vietcombank tại tiện ích này đều được bảo
+      mật, bảo đảm an toàn an ninh thông tin</span
+    >
   </label>
 
   <label class="agree-row">
-    <input type="checkbox" [checked]="acceptedPolicy()" (change)="onPolicyChange($event)" />
-    <span>Tôi đồng ý với điều khoản sử dụng và chính sách bảo mật của VCB.</span>
+    @if(acceptedPolicy()){
+      <button type="button" class="agree-check-btn" (click)="onPolicyChange(!acceptedPolicy())">
+        <app-icon name="ic_check_square" [width]="20" [height]="20"></app-icon>
+      </button>
+    } @else {
+      <button type="button" class="agree-check-btn" (click)="onPolicyChange(!acceptedPolicy())">
+       <div class="unchecked-icon"></div>
+      </button>
+    }
+    <span
+      >Đăng ký nhận thông báo quảng cáo về tất cả các sản phẩm, dịch vụ, chương trình hoạt động của
+      Vietcombank bằng email, tin nhắn hoặc qua các kênh khác (bao gồm cả tin nhắn và email có chứa
+      đường dẫn liên kết)</span
+    >
   </label>
 
   @if (submitted() && (!acceptedTerms() || !acceptedPolicy())) {
