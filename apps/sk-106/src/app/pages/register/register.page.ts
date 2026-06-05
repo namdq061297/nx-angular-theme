@@ -113,6 +113,7 @@ export class RegisterPage {
   protected readonly selectedSlot = signal('');
   protected readonly acceptedTerms = signal(false);
   protected readonly acceptedPolicy = signal(false);
+  protected readonly isUploadDoc = signal(false);
   protected readonly stepSubmitted = signal<Record<RegisterStepKey, boolean>>({
     products: false,
     contact: false,
@@ -170,6 +171,10 @@ export class RegisterPage {
 
   protected updateAcceptedPolicy(value: boolean): void {
     this.acceptedPolicy.set(value);
+  }
+
+  protected updateIsUploadDoc(value: boolean): void {
+    this.isUploadDoc.set(value);
   }
 
   protected previousStep(): void {
@@ -298,6 +303,7 @@ export class RegisterPage {
         day: this.selectedDay(),
         slot: this.selectedSlot(),
       },
+      isUploadDoc: this.isUploadDoc(),
       submittedAt: new Date().toISOString(),
     };
 

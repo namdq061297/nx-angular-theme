@@ -6,62 +6,57 @@
     <h3 class="mb-2">Thông tin sản phẩm dịch vụ</h3>
     <div class="service-list">
       @for (product of selectedProducts(); track product.key) {
-        <article class="service-item">
-          <div class="flex gap-2 items-center">
-            <app-icon
-              class="service-item__icon"
-              [width]="32"
-              [height]="32"
-              [name]="getProductIcon(product.key)"
-            />
-            <h4 class="service-item__title">{{ product.label }}</h4>
-          </div>
+      <article class="service-item">
+        <div class="flex gap-2 items-center">
+          <app-icon class="service-item__icon" [width]="28" [height]="28" [name]="getProductIcon(product.key)" />
+          <h4 class="service-item__title">{{ product.label }}</h4>
+        </div>
 
-          @if (product.key === 'credit') {
-            <div class="service-item__grid info-grid">
-              <div class="info-item">
-                <p class="info-label">Hạn mức thẻ đề nghị</p>
-                <p class="info-value">{{ formatCurrency(contactValue().creditLimit) }}</p>
-              </div>
-              <div class="info-item">
-                <p class="info-label">Loại thẻ</p>
-                <p class="info-value">{{ 'Visa' }}</p>
-              </div>
-              <div class="info-item">
-                <p class="info-label">Sản phẩm</p>
-                <p class="info-value">{{ 'Tư vấn thẻ phù hợp' }}</p>
-              </div>
-              <div class="info-item">
-                <p class="info-label">Phương thức nhận Thẻ/Pin</p>
-                <p class="info-value">
-                  {{ formatReceiveMethod(contactValue().cardReceiveMethod) }}
-                </p>
-              </div>
-            </div>
-          } @else if (product.key === 'loan') {
-            <div class="service-item__grid info-grid">
-              <div class="info-item">
-                <p class="info-label">Số tiền đề nghị cấp tín dụng</p>
-                <p class="info-value">{{ formatCurrency(contactValue().loanAmount) }}</p>
-              </div>
-              <div class="info-item">
-                <p class="info-label">Thời hạn</p>
-                <p class="info-value">{{ contactValue().loanTerm || 'Chưa cung cấp' }} tháng</p>
-              </div>
-              <div class="info-item service-item__full">
-                <p class="info-label">Mục đích cấp tín dụng</p>
-                <p class="info-value">{{ contactValue().loanPurpose || 'Chưa chọn' }}</p>
-              </div>
-            </div>
-          } @else {
-            <div class="service-item__grid info-grid">
-              <div class="info-item service-item__full">
-                <p class="info-label">Sản phẩm</p>
-                <p class="info-value">Đã chọn dịch vụ {{ product.label }}.</p>
-              </div>
-            </div>
-          }
-        </article>
+        @if (product.key === 'credit') {
+        <div class="service-item__grid info-grid">
+          <div class="info-item">
+            <p class="info-label">Hạn mức thẻ đề nghị</p>
+            <p class="info-value">{{ formatCurrency(contactValue().creditLimit) }}</p>
+          </div>
+          <div class="info-item">
+            <p class="info-label">Loại thẻ</p>
+            <p class="info-value">{{ 'Visa' }}</p>
+          </div>
+          <div class="info-item">
+            <p class="info-label">Sản phẩm</p>
+            <p class="info-value">{{ 'Tư vấn thẻ phù hợp' }}</p>
+          </div>
+          <div class="info-item">
+            <p class="info-label">Phương thức nhận Thẻ/Pin</p>
+            <p class="info-value">
+              {{ formatReceiveMethod(contactValue().cardReceiveMethod) }}
+            </p>
+          </div>
+        </div>
+        } @else if (product.key === 'loan') {
+        <div class="service-item__grid info-grid">
+          <div class="info-item">
+            <p class="info-label">Số tiền đề nghị cấp tín dụng</p>
+            <p class="info-value">{{ formatCurrency(contactValue().loanAmount) }}</p>
+          </div>
+          <div class="info-item">
+            <p class="info-label">Thời hạn</p>
+            <p class="info-value">{{ contactValue().loanTerm || 'Chưa cung cấp' }} tháng</p>
+          </div>
+          <div class="info-item service-item__full">
+            <p class="info-label">Mục đích cấp tín dụng</p>
+            <p class="info-value">{{ contactValue().loanPurpose || 'Chưa chọn' }}</p>
+          </div>
+        </div>
+        } @else {
+        <div class="service-item__grid info-grid">
+          <div class="info-item service-item__full">
+            <p class="info-label">Sản phẩm</p>
+            <p class="info-value">Đã chọn dịch vụ {{ product.label }}.</p>
+          </div>
+        </div>
+        }
+      </article>
       }
     </div>
   </div>
@@ -90,42 +85,48 @@
   </div>
 
   <label class="agree-row">
-    @if(acceptedTerms()){
-      <button type="button" class="agree-check-btn" (click)="onTermsChange(!acceptedTerms())">
-        <app-icon name="ic_check_square" [width]="20" [height]="20"></app-icon>
-      </button>
-    } @else {
-      <button type="button" class="agree-check-btn" (click)="onTermsChange(!acceptedTerms())">
-       <div class="unchecked-icon"></div>
-      </button>
-    }
-    <span
-      >Cho phép Vietcombank xử lý dữ liệu cá nhân theo Các điều kiện giao dịch chung về bảo vệ
-      dữ liệu cá nhân để cập nhật thông tin của Quý khách tại Vietcombank. Bảo vệ thông tin của Quý
-      khách tại Vietcombank là ưu tiên hàng đầu của chúng tôi. Tuân thủ Luật bảo vệ cá nhân số
-      91/2025/QH1, mọi thông tin Quý khách cung cấp cho Vietcombank tại tiện ích này đều được bảo
-      mật, bảo đảm an toàn an ninh thông tin</span
-    >
+    <app-toggle
+      [checked]="isUploadDoc()"
+      ariaLabel="Bật tắt tải hồ sơ tổ chức bản mềm"
+      (checkedChange)="onUploadDocChange($event)"
+    ></app-toggle>
+    <span>Tải lên hồ sơ tổ chức bản mềm để Vietcombank có thêm thông tin hỗ trợ quá trình tư vấn (đăng
+      tải hồ sơ không yêu cầu bắt buộc)</span>
   </label>
 
   <label class="agree-row">
-    @if(acceptedPolicy()){
-      <button type="button" class="agree-check-btn" (click)="onPolicyChange(!acceptedPolicy())">
-        <app-icon name="ic_check_square" [width]="20" [height]="20"></app-icon>
-      </button>
+    @if (acceptedTerms()) {
+    <button type="button" class="agree-check-btn" (click)="onTermsChange(!acceptedTerms())">
+      <app-icon name="ic_check_square" [width]="20" [height]="20"></app-icon>
+    </button>
     } @else {
-      <button type="button" class="agree-check-btn" (click)="onPolicyChange(!acceptedPolicy())">
-       <div class="unchecked-icon"></div>
-      </button>
+    <button type="button" class="agree-check-btn" (click)="onTermsChange(!acceptedTerms())">
+      <div class="unchecked-icon"></div>
+    </button>
     }
-    <span
-      >Đăng ký nhận thông báo quảng cáo về tất cả các sản phẩm, dịch vụ, chương trình hoạt động của
+    <span>Cho phép Vietcombank xử lý dữ liệu cá nhân theo Các điều kiện giao dịch chung về bảo vệ dữ
+      liệu cá nhân để cập nhật thông tin của Quý khách tại Vietcombank. Bảo vệ thông tin của Quý
+      khách tại Vietcombank là ưu tiên hàng đầu của chúng tôi. Tuân thủ Luật bảo vệ cá nhân số
+      91/2025/QH1, mọi thông tin Quý khách cung cấp cho Vietcombank tại tiện ích này đều được bảo
+      mật, bảo đảm an toàn an ninh thông tin</span>
+  </label>
+
+  <label class="agree-row">
+    @if (acceptedPolicy()) {
+    <button type="button" class="agree-check-btn" (click)="onPolicyChange(!acceptedPolicy())">
+      <app-icon name="ic_check_square" [width]="20" [height]="20"></app-icon>
+    </button>
+    } @else {
+    <button type="button" class="agree-check-btn" (click)="onPolicyChange(!acceptedPolicy())">
+      <div class="unchecked-icon"></div>
+    </button>
+    }
+    <span>Đăng ký nhận thông báo quảng cáo về tất cả các sản phẩm, dịch vụ, chương trình hoạt động của
       Vietcombank bằng email, tin nhắn hoặc qua các kênh khác (bao gồm cả tin nhắn và email có chứa
-      đường dẫn liên kết)</span
-    >
+      đường dẫn liên kết)</span>
   </label>
 
   @if (submitted() && (!acceptedTerms() || !acceptedPolicy())) {
-    <p class="error">Vui lòng xác nhận điều khoản trước khi hoàn tất.</p>
+  <p class="error">Vui lòng xác nhận điều khoản trước khi hoàn tất.</p>
   }
 </section>

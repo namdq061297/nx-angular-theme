@@ -71,9 +71,11 @@
               [selectedSlot]="selectedSlot()"
               [acceptedTerms]="acceptedTerms()"
               [acceptedPolicy]="acceptedPolicy()"
+              [isUploadDoc]="isUploadDoc()"
               [submitted]="isStepSubmitted('confirm')"
               (acceptedTermsChanged)="updateAcceptedTerms($event)"
               (acceptedPolicyChanged)="updateAcceptedPolicy($event)"
+              (isUploadDocChanged)="updateIsUploadDoc($event)"
             />
           }
         }

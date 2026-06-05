@@ -1,6 +1,12 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { ContactFormValue } from '../register-contact-step/register-contact-step.component';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
+import { ToggleComponent } from '../../../../shared/components/toggle/toggle.component';
 import type { IconName } from '@icons';
 
 export interface ConfirmProductItem {
@@ -14,7 +20,7 @@ export interface ConfirmProductItem {
   templateUrl: './register-confirm-step.component.html',
   styleUrl: './register-confirm-step.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [IconComponent],
+  imports: [IconComponent, ToggleComponent],
 })
 export class RegisterConfirmStepComponent {
   readonly selectedProducts = input.required<ReadonlyArray<ConfirmProductItem>>();
@@ -26,20 +32,25 @@ export class RegisterConfirmStepComponent {
   readonly selectedSlot = input('');
   readonly acceptedTerms = input(false);
   readonly acceptedPolicy = input(false);
+  readonly isUploadDoc = input(false);
   readonly submitted = input(false);
 
   readonly acceptedTermsChanged = output<boolean>();
   readonly acceptedPolicyChanged = output<boolean>();
+  readonly isUploadDocChanged = output<boolean>();
 
   protected onTermsChange(val: boolean): void {
-    console.log('Terms changed:', val);
     this.acceptedTermsChanged.emit(val);
   }
 
   protected onPolicyChange(val: boolean): void {
-    console.log('Policy changed:', val);
     this.acceptedPolicyChanged.emit(val);
   }
+
+  protected onUploadDocChange(val: boolean): void {
+    this.isUploadDocChanged.emit(val);
+  }
+
 
   protected formatCurrency(value: string): string {
     const digits = value.replace(/\D+/g, '');
