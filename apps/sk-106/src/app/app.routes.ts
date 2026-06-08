@@ -39,7 +39,7 @@ export const routes: Routes = [
           {
             path: 'register-list',
             loadComponent: () =>
-              import('./pages/register-list/register-list.page').then((m) => m.RegisterListPage),
+              import('./pages/register/register-list/register-list.page').then((m) => m.RegisterListPage),
           },
         ],
       },

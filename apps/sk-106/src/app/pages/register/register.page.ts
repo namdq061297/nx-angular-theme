@@ -19,58 +19,10 @@ import {
 } from './components/register-schedule-step/register-schedule-step.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import type { IconName } from '@icons';
+import { REGISTER_PRODUCTS, REGISTER_STEPS } from './mock/mock-register';
+import type { RegisterStepKey } from './types/register-types';
 
-type RegisterStepKey = 'products' | 'contact' | 'schedule' | 'confirm';
 
-interface RegisterStep {
-  key: RegisterStepKey;
-  label: string;
-  icon: IconName;
-}
-
-interface RegisterProduct {
-  key: string;
-  label: string;
-  description?: string;
-}
-
-const REGISTER_STEPS: RegisterStep[] = [
-  { key: 'products', label: 'Sản phẩm dịch vụ', icon: 'ic_select_service' },
-  { key: 'contact', label: 'Thông tin', icon: 'ic_user_info' },
-  { key: 'schedule', label: 'Lịch hẹn', icon: 'ic_calendar' },
-  { key: 'confirm', label: 'Xác nhận', icon: 'ic_verify' },
-];
-
-const REGISTER_PRODUCTS: RegisterProduct[] = [
-  {
-    key: 'credit',
-    label: 'Thẻ tín dụng',
-    description: 'Thẻ tín dụng là công cụ cho phép bạn chi tiêu trước, thanh toán sau trong hạn mức được cấp',
-  },
-  {
-    key: 'debit',
-    label: 'Thẻ ghi nợ',
-    description: 'Thẻ ghi nợ cho phép bạn chi tiêu trực tiếp từ số tiền có sẵn trong tài khoản',
-  },
-  {
-    key: 'loan',
-    label: 'Vay',
-    description: '',
-    // description: 'Giải pháp vay tiêu dùng hoặc vay phục vụ kế hoạch tài chính cá nhân.',
-  },
-  {
-    key: 'insurance',
-    label: 'Bảo hiểm',
-    description: '',
-    // description: 'Bảo vệ tài chính với các gói bảo hiểm sức khỏe và nhân thọ.',
-  },
-  {
-    key: 'investment',
-    label: 'Đầu tư',
-    description: '',
-    // description: 'Đầu tư tích lũy với các sản phẩm quỹ và kênh đầu tư linh hoạt.',
-  },
-];
 
 @Component({
   selector: 'app-register-page',
