@@ -51,6 +51,8 @@ npm start
 - Mỗi file response nên khớp route và method, ví dụ `api/v1/reg/updateDocument.post.response.json`.
 - Nếu route có path param, dùng thư mục đặt tên theo route, ví dụ `api/v1/auth/inquiryCustomerProfile.post.response.json`.
 - File response có thể chứa `statusCode`, `delayMs`, `headers`, và `body` để mô phỏng dữ liệu thật sát hơn.
+- Nếu muốn giả lập lỗi, tạo file `*.error.response.json` cho cùng route, hoặc thêm `statusCode` >= 400 vào response.
+- Khi gọi API, có thể ép mock trả lỗi bằng query `?mockScenario=error` hoặc header `x-mock-scenario: error`.
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 

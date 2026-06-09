@@ -6,6 +6,9 @@ export const API_ENDPOINTS = {
     refresh: 'auth/refresh',
     profile: 'auth/profile',
   },
+  reg: {
+    fetchDistricts: 'v1/reg/fetchDistricts',
+  },
   captcha: {
     generate: 'captcha/generate',
     verify: 'captcha/verify',

@@ -16,6 +16,16 @@
 			<button type="button" class="request-search__button" (click)="loadCustomerProfile()">
 				Gọi api /api/v1/auth/inquiryCustomerProfile
 			</button>
+			<button type="button" class="request-search__button" (click)="loadDistricts()">
+				Gọi api /api/v1/reg/fetchDistricts
+			</button>
+			<button
+				type="button"
+				class="request-search__button request-search__button--error"
+				(click)="loadDistrictsError()"
+			>
+				Gọi lỗi /api/v1/reg/fetchDistricts
+			</button>
 		</div>
 
 		@if (isLoadingProfile()) {
@@ -24,6 +34,14 @@
 			<p class="request-search__status request-search__status--error">{{ profileError() }}</p>
 		} @else if (customerProfile()) {
 			<pre class="request-search__result">{{ customerProfile() | json }}</pre>
+		}
+
+		@if (isLoadingDistricts()) {
+			<p class="request-search__status">Đang gọi API district...</p>
+		} @else if (districtsError()) {
+			<p class="request-search__status request-search__status--error">{{ districtsError() }}</p>
+		} @else if (districts().length) {
+			<pre class="request-search__result">{{ districts() | json }}</pre>
 		}
 	</section>
 

@@ -3,9 +3,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { HOME_TAB_COMPONENTS, ProductTabKey } from './home-tab-content.components';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
-import { ApiService } from '../../core/services/api.service';
-import { API_ENDPOINTS } from '../../core/config/api-endpoints';
-import { InquiryCustomerProfileResponse } from '../../core/models/customer-profile.model';
+import { AuthService } from '../../core/services/api/auth.service';
+import { RegisterService } from '../../core/services/api/register.service';
 
 interface TabContent {
   key: ProductTabKey;
@@ -49,14 +48,18 @@ const TAB_CONTENT: TabContent[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage {
-  private readonly api = inject(ApiService);
+  private readonly authService = inject(AuthService);
+  private readonly registerService = inject(RegisterService);
 
   protected readonly tabs = TAB_CONTENT;
   protected readonly activeTab = signal<ProductTabKey>('credit');
   protected readonly searchValue = signal('');
-  protected readonly customerProfile = signal<InquiryCustomerProfileResponse['data'] | null>(null);
+  protected readonly customerProfile = signal<unknown | null>(null);
   protected readonly isLoadingProfile = signal(false);
   protected readonly profileError = signal('');
+  protected readonly districts = signal<unknown[]>([]);
+  protected readonly isLoadingDistricts = signal(false);
+  protected readonly districtsError = signal('');
 
   protected readonly activeTabContent = computed(() => {
     return this.tabs.find((tab) => tab.key === this.activeTab()) ?? this.tabs[0];
@@ -69,7 +72,7 @@ export class HomePage {
     this.isLoadingProfile.set(true);
     this.profileError.set('');
 
-    this.api.post<InquiryCustomerProfileResponse>(API_ENDPOINTS.auth.inquiryCustomerProfile, {}).subscribe({
+    this.authService.inquiryCustomerProfile().subscribe({
       next: (response) => {
         this.customerProfile.set(response.data);
         this.isLoadingProfile.set(false);
@@ -77,6 +80,38 @@ export class HomePage {
       error: () => {
         this.profileError.set('Không gọi được API inquiryCustomerProfile');
         this.isLoadingProfile.set(false);
+      },
+    });
+  }
+
+  protected loadDistricts(): void {
+    this.isLoadingDistricts.set(true);
+    this.districtsError.set('');
+
+    this.registerService.fetchDistricts(467, 'success').subscribe({
+      next: (response) => {
+        this.districts.set(response.data);
+        this.isLoadingDistricts.set(false);
+      },
+      error: () => {
+        this.districtsError.set('Không gọi được API fetchDistricts');
+        this.isLoadingDistricts.set(false);
+      },
+    });
+  }
+
+  protected loadDistrictsError(): void {
+    this.isLoadingDistricts.set(true);
+    this.districtsError.set('');
+
+    this.registerService.fetchDistricts(467, 'error').subscribe({
+      next: (response) => {
+        this.districts.set(response.data);
+        this.isLoadingDistricts.set(false);
+      },
+      error: () => {
+        this.districtsError.set('Không gọi được API fetchDistricts (case lỗi)');
+        this.isLoadingDistricts.set(false);
       },
     });
   }

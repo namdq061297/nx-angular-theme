@@ -27,7 +27,8 @@ app.get('/__health', (_req, res) => {
 app.use('/api', async (req, res, next) => {
   try {
     const requestPath = `${req.baseUrl}${req.path}`;
-    const responseFilePath = await resolveResponseFile(req.method, requestPath);
+    const scenario = getMockScenario(req);
+    const responseFilePath = await resolveResponseFile(req.method, requestPath, scenario);
 
     if (responseFilePath) {
       const response = JSON.parse(fs.readFileSync(responseFilePath, 'utf8'));
@@ -83,7 +84,7 @@ app.listen(port, () => {
   console.log(`App mock API listening on http://localhost:${port}`);
 });
 
-async function resolveResponseFile(method, requestPath) {
+async function resolveResponseFile(method, requestPath, scenario = 'success') {
   const normalizedMethod = method.toUpperCase();
 
   if (!methods.has(normalizedMethod)) {
@@ -92,14 +93,31 @@ async function resolveResponseFile(method, requestPath) {
 
   const relativePath = requestPath.replace(/^\//, '').replace(/^api\//, 'api/');
   const responseFiles = listResponseFiles(mockResponseRoot);
+  const matchedFiles = [];
 
   for (const responseFile of responseFiles) {
-    if (matchesResponseFile(responseFile, relativePath, normalizedMethod.toLowerCase())) {
-      return responseFile;
+    const match = matchesResponseFile(responseFile, relativePath, normalizedMethod.toLowerCase());
+
+    if (match) {
+      matchedFiles.push(match);
     }
   }
 
-  return null;
+  if (!matchedFiles.length) {
+    return null;
+  }
+
+  const exactScenarioMatch = matchedFiles.find((item) => item.scenario === scenario);
+  if (exactScenarioMatch) {
+    return exactScenarioMatch.filePath;
+  }
+
+  const defaultSuccessMatch = matchedFiles.find((item) => item.scenario === 'success');
+  if (defaultSuccessMatch) {
+    return defaultSuccessMatch.filePath;
+  }
+
+  return matchedFiles[0].filePath;
 }
 
 function listResponseFiles(rootDir) {
@@ -127,19 +145,20 @@ function listResponseFiles(rootDir) {
 function matchesResponseFile(filePath, requestPath, method) {
   const relativePath = path.relative(mockResponseRoot, filePath).replace(/\\/g, '/');
 
-  if (!relativePath.endsWith(`.${method}.response.json`) && !relativePath.endsWith('.response.json')) {
+  const parsed = parseResponseFile(relativePath, method);
+
+  if (!parsed) {
     return false;
   }
 
-  const routePattern = relativePath.replace(new RegExp(`\\.${method}\\.response\\.json$`), '').replace(/\.response\.json$/, '');
-  const patternSegments = routePattern.split('/').filter(Boolean);
+  const patternSegments = parsed.routePattern.split('/').filter(Boolean);
   const requestSegments = requestPath.split('/').filter(Boolean);
 
   if (patternSegments.length !== requestSegments.length) {
     return false;
   }
 
-  return patternSegments.every((patternSegment, index) => {
+  const isRouteMatch = patternSegments.every((patternSegment, index) => {
     const requestSegment = requestSegments[index];
 
     if (patternSegment.startsWith('[') && patternSegment.endsWith(']')) {
@@ -152,6 +171,36 @@ function matchesResponseFile(filePath, requestPath, method) {
 
     return patternSegment === requestSegment;
   });
+
+  if (!isRouteMatch) {
+    return false;
+  }
+
+  return {
+    filePath,
+    scenario: parsed.scenario,
+  };
+}
+
+function parseResponseFile(relativePath, method) {
+  const matched = relativePath.match(new RegExp(`^(.*)\\.${method}(?:\\.(success|error))?\\.response\\.json$`));
+
+  if (!matched) {
+    return null;
+  }
+
+  return {
+    routePattern: matched[1],
+    scenario: matched[2] ?? 'success',
+  };
+}
+
+function getMockScenario(req) {
+  const queryScenario = typeof req.query.mockScenario === 'string' ? req.query.mockScenario : '';
+  const headerScenario = typeof req.headers['x-mock-scenario'] === 'string' ? req.headers['x-mock-scenario'] : '';
+  const scenario = (queryScenario || headerScenario || 'success').toLowerCase();
+
+  return scenario === 'error' ? 'error' : 'success';
 }
 
 function buildOpenApiFallback(req) {
