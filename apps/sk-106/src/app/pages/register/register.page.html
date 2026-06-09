@@ -12,7 +12,7 @@
         >
           <span class="stepper-item__icon">
             <app-icon
-              [color]="isStepDone(i) ? '' : isStepActive(i) ? '#fff' : '#939393'"
+              [color]="isStepDone(i) ? '' : isStepActive(i) ? 'var(--color-text-inverse)' : 'var(--color-gray-500)'"
               [name]="isStepDone(i) ? 'ic_check_circle_fill' : step.icon"
               [size]="24"
               alt=""
