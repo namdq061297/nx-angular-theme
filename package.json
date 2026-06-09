@@ -6,6 +6,8 @@
     "start": "nx serve sk-106",
     "mock:api": "nx run sk-106:mock-api",
     "build": "nx build sk-106",
+    "build:uat": "nx build sk-106 --configuration uat",
+    "build:prod": "nx build sk-106 --configuration production",
     "watch": "nx build sk-106 --watch --configuration development",
     "test": "nx test sk-106",
     "serve:ssr:sk-106": "node dist/sk-106/server/server.mjs"
