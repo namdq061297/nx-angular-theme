@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "nx serve sk-106",
+    "mock:api": "nx run sk-106:mock-api",
     "build": "nx build sk-106",
     "watch": "nx build sk-106 --watch --configuration development",
     "test": "nx test sk-106",

@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { HOME_TAB_COMPONENTS, ProductTabKey } from './home-tab-content.components';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { ApiService } from '../../core/services/api.service';
+import { API_ENDPOINTS } from '../../core/config/api-endpoints';
+import { InquiryCustomerProfileResponse } from '../../core/models/customer-profile.model';
 
 interface TabContent {
   key: ProductTabKey;
@@ -46,9 +49,14 @@ const TAB_CONTENT: TabContent[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage {
+  private readonly api = inject(ApiService);
+
   protected readonly tabs = TAB_CONTENT;
   protected readonly activeTab = signal<ProductTabKey>('credit');
   protected readonly searchValue = signal('');
+  protected readonly customerProfile = signal<InquiryCustomerProfileResponse['data'] | null>(null);
+  protected readonly isLoadingProfile = signal(false);
+  protected readonly profileError = signal('');
 
   protected readonly activeTabContent = computed(() => {
     return this.tabs.find((tab) => tab.key === this.activeTab()) ?? this.tabs[0];
@@ -56,6 +64,22 @@ export class HomePage {
 
   protected readonly activeTabComponent = computed(() => HOME_TAB_COMPONENTS[this.activeTab()]);
   protected readonly activeTabInputs = computed(() => ({ searchValue: this.searchValue() }));
+
+  protected loadCustomerProfile(): void {
+    this.isLoadingProfile.set(true);
+    this.profileError.set('');
+
+    this.api.post<InquiryCustomerProfileResponse>(API_ENDPOINTS.auth.inquiryCustomerProfile, {}).subscribe({
+      next: (response) => {
+        this.customerProfile.set(response.data);
+        this.isLoadingProfile.set(false);
+      },
+      error: () => {
+        this.profileError.set('Không gọi được API inquiryCustomerProfile');
+        this.isLoadingProfile.set(false);
+      },
+    });
+  }
 
   protected setActiveTab(tab: ProductTabKey): void {
     this.activeTab.set(tab);

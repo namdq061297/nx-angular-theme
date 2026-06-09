@@ -60,6 +60,9 @@
     },
     "serve": {
       "executor": "@angular/build:dev-server",
+      "options": {
+        "proxyConfig": "apps/sk-106/proxy.conf.json"
+      },
       "configurations": {
         "production": {
           "buildTarget": "sk-106:build:production"
@@ -69,6 +72,12 @@
         }
       },
       "defaultConfiguration": "development"
+    },
+    "mock-api": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node apps/sk-106/src/app/mock-api-server.mjs"
+      }
     },
     "test": {
       "executor": "@angular/build:unit-test"

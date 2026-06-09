@@ -10,6 +10,48 @@ To start a local development server, run:
 ng serve
 ```
 
+## Mock API
+
+This workspace uses the root `api-docs.json` file as the source of truth for fallback DEV API mocking, while custom responses live under `apps/sk-106/src/app/mock-response`.
+
+### Khi mở app
+
+1. Chạy mock server:
+
+```bash
+npm run mock:api
+```
+
+2. Chạy Angular app:
+
+```bash
+npm start
+```
+
+3. Mở trình duyệt tại `http://localhost:4200`.
+
+### Khi API thay đổi
+
+Nếu Swagger/OpenAPI thay đổi, làm theo checklist này:
+
+1. Cập nhật `api-docs.json` trước để đồng bộ contract mới.
+2. Nếu có API mới, thêm file response tương ứng trong `apps/sk-106/src/app/mock-response`.
+3. Nếu request thay đổi query/body/path/header, cập nhật file response mock và phần gọi API trong app nếu cần.
+4. Nếu response đổi field hoặc structure, cập nhật type/interface trong `apps/sk-106/src/app/core/models` hoặc `apps/sk-106/src/app/mock-response/mock-response.interfaces.ts`.
+5. Nếu cần đổi endpoint đang dùng, cập nhật `apps/sk-106/src/app/core/config/api-endpoints.ts`.
+6. Chạy lại:
+
+```bash
+npm run mock:api
+npm start
+```
+
+### Quy ước đặt file mock
+
+- Mỗi file response nên khớp route và method, ví dụ `api/v1/reg/updateDocument.post.response.json`.
+- Nếu route có path param, dùng thư mục đặt tên theo route, ví dụ `api/v1/auth/inquiryCustomerProfile.post.response.json`.
+- File response có thể chứa `statusCode`, `delayMs`, `headers`, và `body` để mô phỏng dữ liệu thật sát hơn.
+
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
 ## Code scaffolding

@@ -1,5 +1,6 @@
 export const API_ENDPOINTS = {
   auth: {
+    inquiryCustomerProfile: 'v1/auth/inquiryCustomerProfile',
     login: 'auth/login',
     logout: 'auth/logout',
     refresh: 'auth/refresh',
