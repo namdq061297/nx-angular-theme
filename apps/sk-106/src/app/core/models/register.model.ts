@@ -64,3 +64,16 @@ export interface FetchDocumentsRequest {
   custId: string;
   phoneNumber: string;
 }
+
+export enum DOCUMENT_PROCESS_STATUS {
+  PENDING = 0,
+  PROCESS = 1,
+  REJECT = 2,
+  SUCCESS = 3,
+  CANCELLATION = 6,
+  COMPLETION = 7,
+  WAITING = 8,
+  NOT_APPLICABLE = 9,
+  REJECTION= 10,
+  PROCESSING = 11
+}

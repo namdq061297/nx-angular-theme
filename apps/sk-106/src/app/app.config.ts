@@ -5,6 +5,11 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 
 import { routes } from './app.routes';
 import { apiInterceptor, authInterceptor } from './core/interceptors/api.interceptor';
+import { registerLocaleData } from '@angular/common';
+import { LOCALE_ID } from '@angular/core';
+import localeVi from '@angular/common/locales/vi';
+
+registerLocaleData(localeVi);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,5 +17,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch(), withInterceptors([apiInterceptor, authInterceptor])),
+    { provide: LOCALE_ID, useValue: 'vi-VN' },
   ],
 };
