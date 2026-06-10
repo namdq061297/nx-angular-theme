@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { HOME_TAB_COMPONENTS, ProductTabKey } from './home-tab-content.components';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { AuthService } from '../../core/services/api/auth.service';
 import { RegisterService } from '../../core/services/api/register.service';
+import { AuthStateService } from '../../core/services/auth-state.service';
 
 interface TabContent {
   key: ProductTabKey;
@@ -50,6 +51,7 @@ const TAB_CONTENT: TabContent[] = [
 export class HomePage {
   private readonly authService = inject(AuthService);
   private readonly registerService = inject(RegisterService);
+  private readonly authState = inject(AuthStateService);
 
   protected readonly tabs = TAB_CONTENT;
   protected readonly activeTab = signal<ProductTabKey>('credit');
@@ -68,6 +70,21 @@ export class HomePage {
   protected readonly activeTabComponent = computed(() => HOME_TAB_COMPONENTS[this.activeTab()]);
   protected readonly activeTabInputs = computed(() => ({ searchValue: this.searchValue() }));
 
+  ngOnInit(): void {
+    this.loadCustomerProfileIfNeeded();
+  }
+
+  protected loadCustomerProfileIfNeeded(): void {
+    const cachedProfile = this.authState.customerProfile();
+
+    if (cachedProfile) {
+      this.customerProfile.set(cachedProfile);
+      return;
+    }
+
+    this.loadCustomerProfile();
+  }
+
   protected loadCustomerProfile(): void {
     this.isLoadingProfile.set(true);
     this.profileError.set('');
@@ -75,6 +92,7 @@ export class HomePage {
     this.authService.inquiryCustomerProfile().subscribe({
       next: (response) => {
         this.customerProfile.set(response.data);
+        this.authState.setCustomerProfile(response.data);
         this.isLoadingProfile.set(false);
       },
       error: () => {

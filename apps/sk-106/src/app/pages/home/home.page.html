@@ -12,7 +12,7 @@
 			/>
 		</div>
 
-		<div class="request-search__actions">
+		<!-- <div class="request-search__actions">
 			<button type="button" class="request-search__button" (click)="loadCustomerProfile()">
 				Gọi api /api/v1/auth/inquiryCustomerProfile
 			</button>
@@ -26,9 +26,9 @@
 			>
 				Gọi lỗi /api/v1/reg/fetchDistricts
 			</button>
-		</div>
+		</div> -->
 
-		@if (isLoadingProfile()) {
+		<!-- @if (isLoadingProfile()) {
 			<p class="request-search__status">Đang gọi API...</p>
 		} @else if (profileError()) {
 			<p class="request-search__status request-search__status--error">{{ profileError() }}</p>
@@ -42,7 +42,7 @@
 			<p class="request-search__status request-search__status--error">{{ districtsError() }}</p>
 		} @else if (districts().length) {
 			<pre class="request-search__result">{{ districts() | json }}</pre>
-		}
+		} -->
 	</section>
 
 	<section class="request-tabs" aria-label="Danh mục sản phẩm">

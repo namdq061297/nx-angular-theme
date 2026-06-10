@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
   },
   reg: {
     fetchDistricts: 'v1/reg/fetchDistricts',
+    getListDocument: 'v1/reg/getListDocument',
   },
   captcha: {
     generate: 'captcha/generate',

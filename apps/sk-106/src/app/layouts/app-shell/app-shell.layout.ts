@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { IconComponent } from '../../shared/components/icon/icon.component';
@@ -18,8 +18,9 @@ export class AppShellLayout {
 
   readonly background = input<string | null>(null);
 
+  protected readonly userProfile = this.authState.customerProfile;
   protected readonly isAuthenticated = this.authState.isAuthenticated;
-  protected readonly greetingName = 'Vũ Thanh Nga';
+  protected readonly greetingName = computed(() => this.userProfile()?.fullName ?? '');
   protected readonly requestCount = 0;
 
   backgroundStyle = '';
@@ -38,7 +39,7 @@ export class AppShellLayout {
         }
       });
   }
-
+  
   protected logout(): void {
     this.authState.logout();
     this.router.navigateByUrl('/login');
