@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { CustomerProfile } from '../models/customer-profile.model';
 
 const AUTH_STORAGE_KEY = 'is_authenticated';
+const CUSTOMER_PROFILE_STORAGE_KEY = 'customer_profile';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,17 @@ export class AuthStateService {
 
     const savedAuthState = localStorage.getItem(AUTH_STORAGE_KEY);
     this.authenticated.set(savedAuthState === 'true');
+
+    const savedCustomerProfile = localStorage.getItem(CUSTOMER_PROFILE_STORAGE_KEY);
+
+    if (savedCustomerProfile) {
+      try {
+        const parsedProfile = JSON.parse(savedCustomerProfile) as CustomerProfile;
+        this.customerProfileSignal.set(parsedProfile);
+      } catch {
+        localStorage.removeItem(CUSTOMER_PROFILE_STORAGE_KEY);
+      }
+    }
   }
 
   login(): void {
@@ -39,11 +51,16 @@ export class AuthStateService {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem(AUTH_STORAGE_KEY);
       localStorage.removeItem('access_token');
+      localStorage.removeItem(CUSTOMER_PROFILE_STORAGE_KEY);
     }
   }
 
   setCustomerProfile(profile: CustomerProfile): void {
     this.customerProfileSignal.set(profile);
+
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(CUSTOMER_PROFILE_STORAGE_KEY, JSON.stringify(profile));
+    }
   }
 
   hasCustomerProfile(): boolean {

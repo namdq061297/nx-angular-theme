@@ -28,6 +28,7 @@ export type RegisterStatus =
 export interface CategoryItem {
   key: CategoryKey;
   label: string;
+  id: number;
 }
 
 export interface RegisterRecord {

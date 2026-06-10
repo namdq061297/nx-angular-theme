@@ -61,7 +61,7 @@ export interface FetchDocumentsResponse {
 
 export interface FetchDocumentsRequest {
   serviceId: number;
-  custId: string;
+  custId: string |  number;
   phoneNumber: string;
 }
 

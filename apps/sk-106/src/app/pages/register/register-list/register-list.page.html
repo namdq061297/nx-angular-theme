@@ -14,8 +14,8 @@
   <section class="register-list-layout">
     <aside class="category-sidebar" aria-label="Danh mục sản phẩm">
       @for (category of categories; track category.key) {
-      <button type="button" class="category-btn" [class.category-btn--active]="selectedCategory() === category.key"
-        [class.category-btn--active-all]="category.key === 'all'" (click)="setCategory(category.key)">
+      <button type="button" class="category-btn" [class.category-btn--active]="selectedCategoryId() === category.id"
+        [class.category-btn--active-all]="category.key === 'all'" (click)="setCategoryId(category.id)">
         @if(category.key !== 'all') {
         <app-icon class="icon_connector" [width]="12" [height]="32" name="ic_connector" />
         }

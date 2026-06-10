@@ -39,12 +39,12 @@ export const REGISTER_PRODUCTS: RegisterProduct[] = [
 ];
 
 export const CATEGORIES: CategoryItem[] = [
-  { key: 'all', label: 'Tất cả dịch vụ' },
-  { key: 'credit', label: 'Thẻ tín dụng' },
-  { key: 'debit', label: 'Thẻ ghi nợ' },
-  { key: 'loan', label: 'Vay' },
-  { key: 'insurance', label: 'Bảo hiểm' },
-  { key: 'investment', label: 'Đầu tư' },
+  { key: 'all', label: 'Tất cả dịch vụ', id: 0 },
+  { key: 'credit', label: 'Thẻ tín dụng', id: 3 },
+  { key: 'debit', label: 'Thẻ ghi nợ', id: 2 },
+  { key: 'loan', label: 'Vay', id: 4 },
+  { key: 'insurance', label: 'Bảo hiểm', id: 1 },
+  { key: 'investment', label: 'Đầu tư', id: 5 },
 ];
 
 export const RECORDS: RegisterRecord[] = [

@@ -15,6 +15,7 @@ import type { CategoryKey, RegisterStatus } from '../types/register-types';
 import { AuthService, RegisterService } from '../../../core/services/api';
 import { DOCUMENT_PROCESS_STATUS, type Document } from '../../../core/models/register.model';
 import { DatePipe } from '@angular/common';
+import { AuthStateService } from '../../../core/services/auth-state.service';
 @Component({
   selector: 'app-register-list-page',
   standalone: true,
@@ -27,20 +28,31 @@ import { DatePipe } from '@angular/common';
 export class RegisterListPage {
   protected readonly categories = CATEGORIES;
   protected readonly selectedCategory = signal<CategoryKey>('all');
+  protected readonly selectedCategoryId = signal<number>(0);
   protected readonly listDocuments = signal<Document[]>([]);
   protected readonly keyword = signal('');
   protected readonly isLoadingProfile = signal(false);
   private readonly registerService = inject(RegisterService);
+  private readonly authState = inject(AuthStateService);
+  protected readonly userProfile = this.authState.customerProfile;
+  protected readonly userId = computed(() => this.userProfile()?.id ?? '');
+  protected readonly userPhone = computed(() => this.userProfile()?.phone ?? '');
 
   ngOnInit(): void {
     this.loadDocuments();
   }
 
-  protected loadDocuments(): void {
+  protected loadDocuments(serviceId?: number): void {
     this.isLoadingProfile.set(true);
-
     this.registerService
-      .getListDocument({ serviceId: 1, custId: '', phoneNumber: '' }, 'success')
+      .getListDocument(
+        {
+          serviceId: serviceId ?? 0,
+          custId: this.userId(),
+          phoneNumber: this.userPhone(),
+        },
+        'success',
+      )
       .subscribe({
         next: (response) => {
           console.log('res', response);
@@ -78,8 +90,10 @@ export class RegisterListPage {
     });
   });
 
-  protected setCategory(category: CategoryKey): void {
-    this.selectedCategory.set(category);
+  protected setCategoryId(categoryId: number): void {
+    console.log('Selected category ID:', categoryId);
+    this.selectedCategoryId.set(categoryId);
+    this.loadDocuments(categoryId);
   }
 
   protected onSearchChange(value: string): void {
