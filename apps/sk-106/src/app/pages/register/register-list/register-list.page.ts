@@ -67,7 +67,7 @@ export class RegisterListPage {
       });
   }
 
-  protected readonly totalFilteredCount = computed(() => this.filteredRecords().length);
+  protected readonly totalFilteredCount = computed(() => this.listDocuments().length);
 
   protected readonly filteredRecords = computed(() => {
     const selected = this.selectedCategory();

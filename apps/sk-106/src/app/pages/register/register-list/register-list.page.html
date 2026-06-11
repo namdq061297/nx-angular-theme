@@ -28,7 +28,7 @@
     </aside>
 
     <div class="record-list" aria-live="polite">
-      @if (filteredRecords().length > 0) {
+      @if (listDocuments().length > 0) {
       @for (record of listDocuments(); track record.id + '-') {
       <article class="record-card">
         <div class="record-col">

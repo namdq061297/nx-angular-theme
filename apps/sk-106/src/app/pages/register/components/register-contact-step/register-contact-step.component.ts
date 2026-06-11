@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { TextInputComponent } from '../../../../shared/components/text-input/text-input.component';
+import { AuthStateService } from '../../../../core/services/auth-state.service';
 
 export type ContactFieldKey =
   | 'fullName'
@@ -57,6 +58,7 @@ export class RegisterContactStepComponent {
   readonly selectedProductKeys = input.required<ReadonlyArray<string>>();
   readonly contactValue = input.required<ContactFormValue>();
   readonly submitted = input(false);
+  readonly isPriority = input(false);
 
   readonly monthlyIncomeOptions = MONTHLY_INCOME_OPTIONS;
   readonly cardReceiveMethodOptions = CARD_RECEIVE_METHOD_OPTIONS;

@@ -44,6 +44,7 @@
               [contactValue]="contactForm()"
               [submitted]="isStepSubmitted('contact')"
               (contactFieldChanged)="updateContactField($event)"
+              [isPriority]="isPriority()"
             />
           }
           @case ('schedule') {

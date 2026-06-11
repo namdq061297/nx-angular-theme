@@ -12,6 +12,7 @@
         [value]="contactValue().fullName"
         [requiredErrorMessage]="'Vui lòng nhập họ tên'"
         (valueChange)="updateField('fullName', $event)"
+        [disabled]="true"
       />
       <app-text-input
         [label]="'Số điện thoại'"
@@ -21,6 +22,7 @@
         [value]="contactValue().phone"
         [requiredErrorMessage]="'Vui lòng nhập số điện thoại'"
         (valueChange)="updateField('phone', $event)"
+        [disabled]="true"
       />
       <app-text-input
         [label]="'Email'"
@@ -30,6 +32,7 @@
         [value]="contactValue().email"
         [requiredErrorMessage]="'Vui lòng nhập email'"
         (valueChange)="updateField('email', $event)"
+        [disabled]="true"
       />
       <label class="select-field">
         <span class="select-field__label">

@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import 'iconify-icon';
 import { Router } from '@angular/router';
 import { AuthStateService } from '../../core/services/auth-state.service';
@@ -43,6 +43,7 @@ import type { RegisterStepKey } from './types/register-types';
 export class RegisterPage {
   private readonly router = inject(Router);
   private readonly authState = inject(AuthStateService);
+  private readonly userProfile = this.authState.customerProfile;
 
   protected readonly steps = REGISTER_STEPS;
   protected readonly products = REGISTER_PRODUCTS;
@@ -74,6 +75,10 @@ export class RegisterPage {
   });
   protected readonly isSubmitting = signal(false);
   protected readonly completed = signal(false);
+  protected readonly userEmail = computed(() => this.userProfile()?.email ?? '');
+  protected readonly userPhone = computed(() => this.userProfile()?.phone ?? '');
+  protected readonly userFullName = computed(() => this.userProfile()?.fullName ?? '');
+  protected readonly isPriority = computed(() => this.userProfile()?.priority ?? false);
 
   protected readonly activeStep = computed(() => this.steps[this.currentStepIndex()]);
   protected readonly isLastStep = computed(() => this.currentStepIndex() === this.steps.length - 1);
@@ -90,6 +95,23 @@ export class RegisterPage {
   protected readonly canContinue = computed(() => {
     return this.isCurrentStepValid();
   });
+
+  constructor() {
+    effect(() => {
+      const profile = this.userProfile();
+
+      if (!profile) {
+        return;
+      }
+
+      this.contactForm.update((form) => ({
+        ...form,
+        fullName: form.fullName || profile.fullName || '',
+        phone: form.phone || profile.phone || '',
+        email: form.email || profile.email || '',
+      }));
+    });
+  }
 
   protected toggleProduct(key: string): void {
     this.selectedProductKeys.update((keys) =>
