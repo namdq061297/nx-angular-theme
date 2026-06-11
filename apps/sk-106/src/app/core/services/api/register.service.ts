@@ -3,7 +3,13 @@ import { Observable } from 'rxjs';
 import { ApiService } from '../api.service';
 import { API_ENDPOINTS } from '../../config/api-endpoints';
 import { FetchDistrictsResponse } from '../../models/district.model';
-import type { FetchDocumentsRequest, FetchDocumentsResponse } from '../../models/register.model';
+import type {
+  FetchDocumentsRequest,
+  FetchDocumentsResponse,
+  FetchOfficesRequest,
+  FetchOfficesResponse,
+} from '../../models/register.model';
+import { formatQueryParams } from '../../../shared/utils.ts/string-util';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +17,10 @@ import type { FetchDocumentsRequest, FetchDocumentsResponse } from '../../models
 export class RegisterService {
   private readonly api = inject(ApiService);
 
-  fetchDistricts(provinceId: number, mockScenario?: 'success' | 'error'): Observable<FetchDistrictsResponse> {
+  fetchDistricts(
+    provinceId: number,
+    mockScenario?: 'success' | 'error',
+  ): Observable<FetchDistrictsResponse> {
     const endpoint = mockScenario
       ? `${API_ENDPOINTS.reg.fetchDistricts}?mockScenario=${encodeURIComponent(mockScenario)}`
       : API_ENDPOINTS.reg.fetchDistricts;
@@ -19,11 +28,25 @@ export class RegisterService {
     return this.api.post<FetchDistrictsResponse>(endpoint, { provinceId });
   }
 
-  getListDocument(body: FetchDocumentsRequest, mockScenario?: 'success' | 'error'): Observable<FetchDocumentsResponse> {
+  getListDocument(
+    body: FetchDocumentsRequest,
+    mockScenario?: 'success' | 'error',
+  ): Observable<FetchDocumentsResponse> {
     const endpoint = mockScenario
       ? `${API_ENDPOINTS.reg.getListDocument}?mockScenario=${encodeURIComponent(mockScenario)}`
       : API_ENDPOINTS.reg.getListDocument;
 
     return this.api.post<FetchDocumentsResponse>(endpoint, body);
+  }
+
+  fetchOffices(
+    body: FetchOfficesRequest,
+    mockScenario?: 'success' | 'error',
+  ): Observable<FetchOfficesResponse> {
+    const endpoint = mockScenario
+      ? `${API_ENDPOINTS.reg.fetchOffices}?mockScenario=${encodeURIComponent(mockScenario)}`
+      : `${API_ENDPOINTS.reg.fetchOffices}?${formatQueryParams(body)}`;
+
+    return this.api.post<FetchOfficesResponse>(endpoint, body);
   }
 }

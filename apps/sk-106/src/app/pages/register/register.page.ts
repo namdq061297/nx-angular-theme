@@ -1,4 +1,12 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import 'iconify-icon';
 import { Router } from '@angular/router';
 import { AuthStateService } from '../../core/services/auth-state.service';
@@ -15,14 +23,14 @@ import {
 import { RegisterProductsStepComponent } from './components/register-products-step/register-products-step.component';
 import {
   RegisterScheduleStepComponent,
-  TransactionPoint,
 } from './components/register-schedule-step/register-schedule-step.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import type { IconName } from '@icons';
 import { REGISTER_PRODUCTS, REGISTER_STEPS } from './mock/mock-register';
-import type { RegisterStepKey } from './types/register-types';
-
-
+import type { RegisterStepKey, TransactionPoint } from './types/register-types';
+import { RegisterService } from '../../core/services/api';
+import type { District } from '../../core/models/district.model';
+import type { Office } from '../../core/models/register.model';
 
 @Component({
   selector: 'app-register-page',
@@ -61,7 +69,7 @@ export class RegisterPage {
     loanPurpose: '',
   });
   protected readonly selectedConsultMethod = signal('');
-  protected readonly selectedTransactionPoint = signal<TransactionPoint | null>(null);
+  protected readonly selectedTransactionPoint = signal<Office | null>(null);
   protected readonly selectedDay = signal('');
   protected readonly selectedSlot = signal('');
   protected readonly acceptedTerms = signal(false);
@@ -79,19 +87,26 @@ export class RegisterPage {
   protected readonly userPhone = computed(() => this.userProfile()?.phone ?? '');
   protected readonly userFullName = computed(() => this.userProfile()?.fullName ?? '');
   protected readonly isPriority = computed(() => this.userProfile()?.priority ?? false);
-
+  private readonly registerService = inject(RegisterService);
+  protected readonly offices = signal<Office[]>([]);
+  protected readonly isLoadingOffices = signal(false);
+  protected readonly officeError = signal('');
   protected readonly activeStep = computed(() => this.steps[this.currentStepIndex()]);
   protected readonly isLastStep = computed(() => this.currentStepIndex() === this.steps.length - 1);
   protected readonly selectedProductLabels = computed(() => {
     const selected = this.selectedProductKeys();
-    return this.products.filter((product) => selected.includes(product.key)).map((product) => product.label);
-  });
-  protected readonly selectedProductsForConfirm = computed<ReadonlyArray<ConfirmProductItem>>(() => {
-    const selected = this.selectedProductKeys();
     return this.products
       .filter((product) => selected.includes(product.key))
-      .map((product) => ({ key: product.key, label: product.label }));
+      .map((product) => product.label);
   });
+  protected readonly selectedProductsForConfirm = computed<ReadonlyArray<ConfirmProductItem>>(
+    () => {
+      const selected = this.selectedProductKeys();
+      return this.products
+        .filter((product) => selected.includes(product.key))
+        .map((product) => ({ key: product.key, label: product.label }));
+    },
+  );
   protected readonly canContinue = computed(() => {
     return this.isCurrentStepValid();
   });
@@ -113,6 +128,32 @@ export class RegisterPage {
     });
   }
 
+  ngOnInit(): void {
+    this.loadOffices();
+  }
+
+  protected loadOffices(): void {
+    this.isLoadingOffices.set(true);
+    this.officeError.set('');
+
+    this.registerService.fetchOffices({
+      districtID: '10714',
+      type: '2',
+      customerType: '0'
+    }, 'success').subscribe({
+      next: (response) => {
+        this.offices.set(response.data);
+        this.isLoadingOffices.set(false);
+      },
+      error: () => {
+        this.officeError.set('Không gọi được API fetchOffices');
+        this.isLoadingOffices.set(false);
+      },
+    });
+  }
+
+  
+
   protected toggleProduct(key: string): void {
     this.selectedProductKeys.update((keys) =>
       keys.includes(key) ? keys.filter((item) => item !== key) : [...keys, key],
@@ -127,7 +168,7 @@ export class RegisterPage {
     this.selectedDay.set(value);
   }
 
-  protected updateSelectedTransactionPoint(value: TransactionPoint | null): void {
+  protected updateSelectedTransactionPoint(value: Office | null): void {
     this.selectedTransactionPoint.set(value);
   }
 
@@ -246,7 +287,8 @@ export class RegisterPage {
     const hasLoanProduct = this.selectedProductKeys().includes('loan');
 
     if (hasCreditProduct) {
-      const hasCreditInfo = value.creditLimit.trim().length > 0 && value.cardReceiveMethod.trim().length > 0;
+      const hasCreditInfo =
+        value.creditLimit.trim().length > 0 && value.cardReceiveMethod.trim().length > 0;
 
       if (!hasCreditInfo) {
         return false;

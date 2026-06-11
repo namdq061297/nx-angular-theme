@@ -12,7 +12,7 @@
           [class.droplist__trigger--invalid]="submitted() && !selectedTransactionPoint()"
           [class.droplist__trigger--selected]="!!selectedTransactionPoint()" (click)="toggleTransactionPointDropdown()">
           <span class="droplist__trigger-text">
-            {{ selectedTransactionPoint()?.name || '- Chọn Điểm giao dịch -' }}
+            {{ selectedTransactionPoint()?.office_NAME || '- Chọn Điểm giao dịch -' }}
           </span>
 
           <span class="droplist__trigger-actions">
@@ -38,9 +38,9 @@
             -</button>
 
           <div class="droplist__list">
-            @for (point of filteredTransactionPoints(); track point.name) {
+            @for (point of filteredTransactionPoints(); track point.district_ID) {
             <button type="button" class="droplist__item" (click)="selectTransactionPoint(point)">
-              <span class="droplist__item-name">{{ point.name }}</span>
+              <span class="droplist__item-name">{{ point.office_NAME }}</span>
               <span class="droplist__item-address">{{ point.address }}</span>
             </button>
             }

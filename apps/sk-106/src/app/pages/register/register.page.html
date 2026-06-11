@@ -59,13 +59,14 @@
               (consultMethodChanged)="updateSelectedConsultMethod($event)"
               (dayChanged)="updateSelectedDay($event)"
               (slotChanged)="updateSelectedSlot($event)"
+              [offices]="offices()"
             />
           }
           @case ('confirm') {
             <app-register-confirm-step
               [selectedProducts]="selectedProductsForConfirm()"
               [contactValue]="contactForm()"
-              [selectedTransactionPointName]="selectedTransactionPoint()?.name || ''"
+              [selectedTransactionPointName]="selectedTransactionPoint()?.office_NAME || ''"
               [selectedTransactionPointAddress]="selectedTransactionPoint()?.address || ''"
               [selectedConsultMethod]="selectedConsultMethod()"
               [selectedDay]="selectedDay()"

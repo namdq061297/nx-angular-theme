@@ -6,14 +6,11 @@ import {
   output,
   signal,
   CUSTOM_ELEMENTS_SCHEMA,
+  effect,
 } from '@angular/core';
 import { TextInputComponent } from '../../../../shared/components/text-input/text-input.component';
 import 'iconify-icon';
-
-export interface TransactionPoint {
-  name: string;
-  address: string;
-}
+import type { Office } from '../../../../core/models/register.model';
 
 @Component({
   selector: 'app-register-schedule-step',
@@ -26,13 +23,14 @@ export interface TransactionPoint {
 })
 export class RegisterScheduleStepComponent {
   readonly selectedProductKeys = input.required<ReadonlyArray<string>>();
-  readonly selectedTransactionPoint = input<TransactionPoint | null>(null);
+  readonly selectedTransactionPoint = input<Office | null>(null);
   readonly selectedConsultMethod = input('');
   readonly selectedDay = input('');
   readonly selectedSlot = input('');
   readonly submitted = input(false);
+  readonly offices = input<Office[]>([]);
 
-  readonly transactionPointChanged = output<TransactionPoint | null>();
+  readonly transactionPointChanged = output<Office | null>();
   readonly consultMethodChanged = output<string>();
   readonly dayChanged = output<string>();
   readonly slotChanged = output<string>();
@@ -44,46 +42,11 @@ export class RegisterScheduleStepComponent {
     this.isTransactionPointDropdownOpen.asReadonly();
   protected readonly transactionPointSearchValue = this.transactionPointSearch.asReadonly();
 
-  protected readonly transactionPoints: ReadonlyArray<TransactionPoint> = [
-    {
-      name: 'Chi nhánh Ba Đình - Trụ sở chi nhánh',
-      address: 'Số 72 đường Trần Hưng Đạo, phường Trần Hưng Đạo, quận Hoàn Kiếm, thành phố Hà Nội',
-    },
-    {
-      name: 'Chi nhánh Hà Nội - PDG Quang Trung',
-      address: 'Số 2F Quang Trung, phường Tràng Tiền, quận Hoàn Kiếm, thành phố Hà Nội',
-    },
-    {
-      name: 'Chi nhánh Đông Anh - PDG Hàng Bông',
-      address: 'Số 40 Phùng Hưng, phường Hàng Bông, quận Hoàn Kiếm, thành phố Hà Nội',
-    },
-    {
-      name: 'Chi nhánh Hoàn Kiếm - Trụ sở chi nhánh',
-      address: '23 Phan Chu Trinh, phường Phan Chu Trinh, quận Hoàn Kiếm, thành phố Hà Nội',
-    },
-    {
-      name: 'Chi nhánh Ba Đình - Trụ sở chi nhánh',
-      address: 'Số 72 đường Trần Hưng Đạo, phường Trần Hưng Đạo, quận Hoàn Kiếm, thành phố Hà Nội',
-    },
-    {
-      name: 'Chi nhánh Hà Nội - PDG Quang Trung',
-      address: 'Số 2F Quang Trung, phường Tràng Tiền, quận Hoàn Kiếm, thành phố Hà Nội',
-    },
-    {
-      name: 'Chi nhánh Đông Anh - PDG Hàng Bông',
-      address: 'Số 40 Phùng Hưng, phường Hàng Bông, quận Hoàn Kiếm, thành phố Hà Nội',
-    },
-    {
-      name: 'Chi nhánh Hoàn Kiếm - Trụ sở chi nhánh',
-      address: '23 Phan Chu Trinh, phường Phan Chu Trinh, quận Hoàn Kiếm, thành phố Hà Nội',
-    },
-  ];
-
-  protected readonly availableConsultMethods = [
+  readonly availableConsultMethods = [
     { label: 'Tại quầy', value: 'counter' },
     { label: 'Qua hotline', value: 'hotline' },
   ] as const;
-  protected readonly availableSlots = [
+  readonly availableSlots = [
     '08:00 - 09:00',
     '09:00 - 10:00',
     '10:00 - 11:00',
@@ -94,16 +57,23 @@ export class RegisterScheduleStepComponent {
     '16:00 - 17:00',
   ];
 
+  constructor() {
+    effect(() => {
+      console.log('Selected Office:', this.offices());
+    });
+  }
+
   protected readonly filteredTransactionPoints = computed(() => {
     const query = this.transactionPointSearch().trim().toLowerCase();
 
     if (!query) {
-      return this.transactionPoints;
+      return this.offices();
     }
 
-    return this.transactionPoints.filter((point) => {
+    return this.offices().filter((office) => {
       return (
-        point.name.toLowerCase().includes(query) || point.address.toLowerCase().includes(query)
+        office.address.toLowerCase().includes(query) ||
+        office.office_NAME.toLowerCase().includes(query) 
       );
     });
   });
@@ -120,7 +90,7 @@ export class RegisterScheduleStepComponent {
     this.transactionPointSearch.set(value);
   }
 
-  protected selectTransactionPoint(point: TransactionPoint): void {
+  protected selectTransactionPoint(point: Office): void {
     this.transactionPointChanged.emit(point);
     this.transactionPointSearch.set('');
     this.isTransactionPointDropdownOpen.set(false);

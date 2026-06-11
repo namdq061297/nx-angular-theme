@@ -1,4 +1,10 @@
-import type { CategoryItem, RegisterProduct, RegisterRecord, RegisterStep } from "../types/register-types";
+import type {
+  CategoryItem,
+  RegisterProduct,
+  RegisterRecord,
+  RegisterStep,
+  TransactionPoint,
+} from '../types/register-types';
 
 export const REGISTER_STEPS: RegisterStep[] = [
   { key: 'products', label: 'Sản phẩm dịch vụ', icon: 'ic_select_service' },
@@ -11,7 +17,8 @@ export const REGISTER_PRODUCTS: RegisterProduct[] = [
   {
     key: 'credit',
     label: 'Thẻ tín dụng',
-    description: 'Thẻ tín dụng là công cụ cho phép bạn chi tiêu trước, thanh toán sau trong hạn mức được cấp',
+    description:
+      'Thẻ tín dụng là công cụ cho phép bạn chi tiêu trước, thanh toán sau trong hạn mức được cấp',
   },
   {
     key: 'debit',
@@ -97,3 +104,39 @@ export const RECORDS: RegisterRecord[] = [
     products: ['insurance', 'investment'],
   },
 ];
+
+export const transactionPoints: ReadonlyArray<TransactionPoint> = [
+  {
+    name: 'Chi nhánh Ba Đình - Trụ sở chi nhánh',
+    address: 'Số 72 đường Trần Hưng Đạo, phường Trần Hưng Đạo, quận Hoàn Kiếm, thành phố Hà Nội',
+  },
+  {
+    name: 'Chi nhánh Hà Nội - PDG Quang Trung',
+    address: 'Số 2F Quang Trung, phường Tràng Tiền, quận Hoàn Kiếm, thành phố Hà Nội',
+  },
+  {
+    name: 'Chi nhánh Đông Anh - PDG Hàng Bông',
+    address: 'Số 40 Phùng Hưng, phường Hàng Bông, quận Hoàn Kiếm, thành phố Hà Nội',
+  },
+  {
+    name: 'Chi nhánh Hoàn Kiếm - Trụ sở chi nhánh',
+    address: '23 Phan Chu Trinh, phường Phan Chu Trinh, quận Hoàn Kiếm, thành phố Hà Nội',
+  },
+  {
+    name: 'Chi nhánh Ba Đình - Trụ sở chi nhánh',
+    address: 'Số 72 đường Trần Hưng Đạo, phường Trần Hưng Đạo, quận Hoàn Kiếm, thành phố Hà Nội',
+  },
+  {
+    name: 'Chi nhánh Hà Nội - PDG Quang Trung',
+    address: 'Số 2F Quang Trung, phường Tràng Tiền, quận Hoàn Kiếm, thành phố Hà Nội',
+  },
+  {
+    name: 'Chi nhánh Đông Anh - PDG Hàng Bông',
+    address: 'Số 40 Phùng Hưng, phường Hàng Bông, quận Hoàn Kiếm, thành phố Hà Nội',
+  },
+  {
+    name: 'Chi nhánh Hoàn Kiếm - Trụ sở chi nhánh',
+    address: '23 Phan Chu Trinh, phường Phan Chu Trinh, quận Hoàn Kiếm, thành phố Hà Nội',
+  },
+];
+

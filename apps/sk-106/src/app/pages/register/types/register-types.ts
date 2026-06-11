@@ -39,3 +39,7 @@ export interface RegisterRecord {
   status: RegisterStatus;
   products: CategoryKey[];
 }
+export interface TransactionPoint {
+  name: string;
+  address: string;
+}

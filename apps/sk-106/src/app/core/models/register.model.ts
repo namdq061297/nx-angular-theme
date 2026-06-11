@@ -53,16 +53,54 @@ export interface Document {
   reg_MESSAGE: string | null;
 }
 
+export interface Office {
+  branch_ID: number;
+  costcenter: number;
+  office_NAME: string;
+  crm_CREDIT_STATUS: string;
+  crm_INSURANCE_STATUS: string;
+  crm_DEBIT_STATUS: string;
+  crm_LOAN_STATUS: string;
+  debit_STATUS: string;
+  insurance_STATUS: string;
+  loan_STATUS: string;
+  available_STATUS: string;
+  office_ID: number;
+  last_UPDATE_DATE: string;
+  address: string;
+  office_NAME_EN: string;
+  address_EN: string;
+  credit_STATUS: string;
+  district_ID: number;
+  rlos_STATUS: string;
+  latitude: string;
+  longitude: string;
+  slots: string;
+  status: number;
+}
+
 export interface FetchDocumentsResponse {
   code: number;
   desc: string;
   data: Document[];
 }
 
+export interface FetchOfficesResponse {
+  code: number;
+  desc: string;
+  data: Office[];
+}
+
 export interface FetchDocumentsRequest {
   serviceId: number;
-  custId: string |  number;
+  custId: string | number;
   phoneNumber: string;
+}
+
+export interface FetchOfficesRequest {
+  districtID: string | number;
+  type: string | number;
+  customerType: string | number;
 }
 
 export enum DOCUMENT_PROCESS_STATUS {
@@ -74,6 +112,6 @@ export enum DOCUMENT_PROCESS_STATUS {
   COMPLETION = 7,
   WAITING = 8,
   NOT_APPLICABLE = 9,
-  REJECTION= 10,
-  PROCESSING = 11
+  REJECTION = 10,
+  PROCESSING = 11,
 }
