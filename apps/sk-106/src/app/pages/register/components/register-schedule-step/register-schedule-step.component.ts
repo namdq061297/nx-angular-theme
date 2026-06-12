@@ -7,10 +7,13 @@ import {
   signal,
   CUSTOM_ELEMENTS_SCHEMA,
   effect,
+  inject,
 } from '@angular/core';
 import { TextInputComponent } from '../../../../shared/components/text-input/text-input.component';
+import { ModalService } from '../../../../shared/components/modal/modal.service';
 import 'iconify-icon';
 import type { Office } from '../../../../core/models/register.model';
+import { TransactionPointFilterModalComponent } from './transaction-point-filter-modal.component';
 
 @Component({
   selector: 'app-register-schedule-step',
@@ -37,6 +40,7 @@ export class RegisterScheduleStepComponent {
 
   private readonly isTransactionPointDropdownOpen = signal(false);
   private readonly transactionPointSearch = signal('');
+  private readonly modalService = inject(ModalService);
 
   protected readonly transactionPointDropdownOpen =
     this.isTransactionPointDropdownOpen.asReadonly();
@@ -117,6 +121,33 @@ export class RegisterScheduleStepComponent {
     const dateInput = input as HTMLInputElement & { showPicker?: () => void };
     if (dateInput.showPicker) {
       dateInput.showPicker();
+    }
+  }
+
+  protected onOpenTransactionPointFilterModal(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    void this.openTransactionPointFilterModal();
+  }
+
+  private async openTransactionPointFilterModal(): Promise<void> {
+    const ref = this.modalService.open<
+      { offices: Office[]; selectedTransactionPoint: Office | null },
+      Office
+    >({
+      title: 'Chọn điểm giao dịch',
+      component: TransactionPointFilterModalComponent,
+      data: {
+        offices: this.offices(),
+        selectedTransactionPoint: this.selectedTransactionPoint(),
+      },
+      width: '860px',
+    });
+
+    const selectedOffice = await ref.afterClosed$;
+
+    if (selectedOffice) {
+      this.selectTransactionPoint(selectedOffice);
     }
   }
 }

@@ -79,6 +79,19 @@
   line-height: 1;
 }
 
+.droplist__filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.droplist__filter:focus-visible {
+  outline: 2px solid var(--color-border-brand-primary);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
 .droplist__caret {
   color: var(--color-text-subtle);
   font-size: 12px;

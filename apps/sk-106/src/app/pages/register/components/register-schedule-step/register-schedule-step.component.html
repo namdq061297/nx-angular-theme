@@ -22,8 +22,18 @@
               <iconify-icon [style.color]="'var(--color-fg-quaternary)'"  icon="carbon:close-filled" width="20" height="20"></iconify-icon>
             </span>
             }
-            <iconify-icon [style.color]="'var(--color-text-brand-primary)'" icon="solar:filter-broken" width="20"
-              height="20"></iconify-icon>
+            <span
+              class="droplist__filter"
+              role="button"
+              tabindex="0"
+              aria-label="Mở bộ lọc điểm giao dịch"
+              (click)="onOpenTransactionPointFilterModal($event)"
+              (keydown.enter)="onOpenTransactionPointFilterModal($event)"
+              (keydown.space)="onOpenTransactionPointFilterModal($event)"
+            >
+              <iconify-icon [style.color]="'var(--color-text-brand-primary)'" icon="solar:filter-broken" width="20"
+                height="20"></iconify-icon>
+            </span>
           </span>
         </button>
         @if (selectedTransactionPoint()) {
