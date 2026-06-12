@@ -8,10 +8,12 @@ import {
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  CUSTOM_ELEMENTS_SCHEMA,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModalConfig } from './modal.types';
 import { MODAL_CLOSE_FN, MODAL_DATA } from './modal.tokens';
+import 'iconify-icon';
 
 @Component({
   selector: 'app-modal-wrapper',
@@ -20,6 +22,7 @@ import { MODAL_CLOSE_FN, MODAL_DATA } from './modal.tokens';
   templateUrl: './modal-wrapper.component.html',
   styleUrls: ['./modal-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ModalWrapperComponent implements OnInit, OnDestroy {
   @ViewChild('contentHost', { read: ViewContainerRef, static: true })

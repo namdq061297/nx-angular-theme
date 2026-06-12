@@ -13,7 +13,7 @@ import { TextInputComponent } from '../../../../shared/components/text-input/tex
 import { ModalService } from '../../../../shared/components/modal/modal.service';
 import 'iconify-icon';
 import type { Office } from '../../../../core/models/register.model';
-import { TransactionPointFilterModalComponent } from './transaction-point-filter-modal.component';
+import { TransactionPointFilterModalComponent } from './transaction-point-filter-modal/transaction-point-filter-modal.component';
 
 @Component({
   selector: 'app-register-schedule-step',

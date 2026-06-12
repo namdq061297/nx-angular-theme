@@ -1,0 +1,42 @@
+<div class="filter-modal">
+  <div class="filter-grid">
+    <label class="field">
+      <span class="body_medium_medium panel-title">Chọn Tỉnh/Thành phố <span class="required">*</span></span>
+      <select class="field__control" [value]="selectedProvince()"
+        (change)="onProvinceChange($any($event.target).value)">
+        <option value="">- Chọn Tỉnh/Thành phố -</option>
+        @for (province of provinceOptions(); track province) {
+        <option [value]="province">{{ province }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="field">
+      <span class="body_medium_medium panel-title">Chọn Quận/Huyện <span class="required">*</span></span>
+      <select class="field__control" [disabled]="!selectedProvince()" [value]="selectedDistrict()"
+        (change)="onDistrictChange($any($event.target).value)">
+        <option value="">- Chọn Quận/Huyện -</option>
+        @for (district of districtOptions(); track district) {
+        <option [value]="district">{{ district }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <app-text-input [isSearch]="true" [label]="''" [value]="searchKeyword()" [placeholder]="'Tìm kiếm điểm giao dịch'"
+    (valueChange)="updateSearchKeyword($event)" />
+
+  <div class="office-list">
+    @for (office of filteredOffices(); track office.office_ID) {
+    <button type="button" class="office-item" [class.office-item--selected]="isSelectedOffice(office)"
+      (click)="selectOffice(office)">
+      <span class="office-item__name">{{ office.office_NAME }}</span>
+      <span class="office-item__address">{{ office.address }}</span>
+    </button>
+    }
+
+    @if (filteredOffices().length === 0) {
+    <p class="empty-state">Không tìm thấy điểm giao dịch phù hợp.</p>
+    }
+  </div>
+</div>
