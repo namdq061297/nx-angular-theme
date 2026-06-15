@@ -21,16 +21,14 @@ import {
   RegisterContactStepComponent,
 } from './components/register-contact-step/register-contact-step.component';
 import { RegisterProductsStepComponent } from './components/register-products-step/register-products-step.component';
-import {
-  RegisterScheduleStepComponent,
-} from './components/register-schedule-step/register-schedule-step.component';
+import { RegisterScheduleStepComponent } from './components/register-schedule-step/register-schedule-step.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import type { IconName } from '@icons';
 import { REGISTER_PRODUCTS, REGISTER_STEPS } from './mock/mock-register';
 import type { RegisterStepKey, TransactionPoint } from './types/register-types';
 import { RegisterService } from '../../core/services/api';
 import type { District } from '../../core/models/district.model';
-import type { Office } from '../../core/models/register.model';
+import type { Office, Province } from '../../core/models/register.model';
 
 @Component({
   selector: 'app-register-page',
@@ -91,6 +89,12 @@ export class RegisterPage {
   protected readonly offices = signal<Office[]>([]);
   protected readonly isLoadingOffices = signal(false);
   protected readonly officeError = signal('');
+  protected readonly districts = signal<District[]>([]);
+  protected readonly isLoadingDistricts = signal(false);
+  protected readonly districtError = signal('');
+  protected readonly provinces = signal<Province[]>([]);
+  protected readonly isLoadingProvinces = signal(false);
+  protected readonly provinceError = signal('');
   protected readonly activeStep = computed(() => this.steps[this.currentStepIndex()]);
   protected readonly isLastStep = computed(() => this.currentStepIndex() === this.steps.length - 1);
   protected readonly selectedProductLabels = computed(() => {
@@ -130,29 +134,49 @@ export class RegisterPage {
 
   ngOnInit(): void {
     this.loadOffices();
+    this.loadProvinces();
   }
 
   protected loadOffices(): void {
     this.isLoadingOffices.set(true);
     this.officeError.set('');
 
-    this.registerService.fetchOffices({
-      districtID: '10714',
-      type: '2',
-      customerType: '0'
-    }, 'success').subscribe({
+    this.registerService
+      .fetchOffices(
+        {
+          districtID: '10714',
+          type: '2',
+          customerType: '0',
+        },
+        'success',
+      )
+      .subscribe({
+        next: (response) => {
+          this.offices.set(response.data);
+          this.isLoadingOffices.set(false);
+        },
+        error: () => {
+          this.officeError.set('Không gọi được API fetchOffices');
+          this.isLoadingOffices.set(false);
+        },
+      });
+  }
+
+  protected loadProvinces(): void {
+    this.isLoadingProvinces.set(true);
+    this.provinceError.set('');
+
+    this.registerService.fetchProvinces({ type: '1', customType: '0' }, 'success').subscribe({
       next: (response) => {
-        this.offices.set(response.data);
-        this.isLoadingOffices.set(false);
+        this.provinces.set(response.data);
+        this.isLoadingProvinces.set(false);
       },
       error: () => {
-        this.officeError.set('Không gọi được API fetchOffices');
-        this.isLoadingOffices.set(false);
+        this.provinceError.set('Không gọi được API fetchProvinces');
+        this.isLoadingProvinces.set(false);
       },
     });
   }
-
-  
 
   protected toggleProduct(key: string): void {
     this.selectedProductKeys.update((keys) =>

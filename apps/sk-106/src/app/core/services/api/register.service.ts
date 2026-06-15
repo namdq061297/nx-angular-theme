@@ -8,6 +8,8 @@ import type {
   FetchDocumentsResponse,
   FetchOfficesRequest,
   FetchOfficesResponse,
+  FetchProvincesRequest,
+  FetchProvincesResponse,
 } from '../../models/register.model';
 import { formatQueryParams } from '../../../shared/utils.ts/string-util';
 
@@ -17,13 +19,13 @@ import { formatQueryParams } from '../../../shared/utils.ts/string-util';
 export class RegisterService {
   private readonly api = inject(ApiService);
 
-  fetchDistricts(
-    provinceId: number,
+  getDistrict(
+    provinceId: number | string,
     mockScenario?: 'success' | 'error',
   ): Observable<FetchDistrictsResponse> {
     const endpoint = mockScenario
       ? `${API_ENDPOINTS.reg.fetchDistricts}?mockScenario=${encodeURIComponent(mockScenario)}`
-      : API_ENDPOINTS.reg.fetchDistricts;
+      : `${API_ENDPOINTS.reg.fetchDistricts}?provinceId=${encodeURIComponent(String(provinceId))}`;
 
     return this.api.post<FetchDistrictsResponse>(endpoint, { provinceId });
   }
@@ -48,5 +50,16 @@ export class RegisterService {
       : `${API_ENDPOINTS.reg.fetchOffices}?${formatQueryParams(body)}`;
 
     return this.api.post<FetchOfficesResponse>(endpoint, body);
+  }
+
+  fetchProvinces(
+    body: FetchProvincesRequest,
+    mockScenario?: 'success' | 'error',
+  ): Observable<FetchProvincesResponse> {
+    const endpoint = mockScenario
+      ? `${API_ENDPOINTS.reg.fetchProvinces}?mockScenario=${encodeURIComponent(mockScenario)}`
+      : `${API_ENDPOINTS.reg.fetchProvinces}?${formatQueryParams(body)}`;
+
+    return this.api.post<FetchProvincesResponse>(endpoint, body);
   }
 }

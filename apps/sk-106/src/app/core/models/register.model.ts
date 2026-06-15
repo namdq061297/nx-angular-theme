@@ -115,3 +115,21 @@ export enum DOCUMENT_PROCESS_STATUS {
   REJECTION = 10,
   PROCESSING = 11,
 }
+
+export interface FetchProvincesRequest {
+  type: string | number;
+  customType: string | number;
+}
+
+export interface Province {
+  province_NAME: string;
+  pcode: string;
+  province_NAME_EN: string;
+  province_ID: number;
+}
+
+export interface FetchProvincesResponse {
+  code: number;
+  desc: string;
+  data: Province[];
+}

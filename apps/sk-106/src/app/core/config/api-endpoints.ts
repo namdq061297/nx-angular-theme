@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
     fetchDistricts: 'v1/reg/fetchDistricts',
     getListDocument: 'v1/reg/getListDocument',
     fetchOffices: 'v1/reg/fetchOffices',
+    fetchProvinces: 'v1/reg/fetchProvinces',
   },
   captcha: {
     generate: 'captcha/generate',
