@@ -1,12 +1,19 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import type { Office } from '../../../../../core/models/register.model';
+import type { Office, Province } from '../../../../../core/models/register.model';
 import { MODAL_CLOSE_FN, MODAL_DATA } from '../../../../../shared/components/modal';
 import { TextInputComponent } from '../../../../../shared/components/text-input/text-input.component';
+import { RegisterService } from '../../../../../core/services/api';
 
 interface TransactionPointFilterModalData {
   offices: Office[];
+  provinces: Province[];
   selectedTransactionPoint: Office | null;
+}
+
+interface ProvinceOption {
+  value: string;
+  label: string;
 }
 
 @Component({
@@ -20,6 +27,7 @@ interface TransactionPointFilterModalData {
 export class TransactionPointFilterModalComponent {
   private readonly modalData = inject<TransactionPointFilterModalData>(MODAL_DATA);
   private readonly closeFn = inject<(result?: Office) => void>(MODAL_CLOSE_FN);
+  private readonly registerService = inject(RegisterService);
 
   private readonly selectedProvinceSignal = signal('');
   private readonly selectedDistrictSignal = signal('');
@@ -29,10 +37,35 @@ export class TransactionPointFilterModalComponent {
   protected readonly selectedDistrict = this.selectedDistrictSignal.asReadonly();
   protected readonly searchKeyword = this.searchKeywordSignal.asReadonly();
 
-  protected readonly provinceOptions = computed(() => {
-    return Array.from(
-      new Set(this.modalData.offices.map((office) => this.extractProvince(office.address))),
-    ).sort((a, b) => a.localeCompare(b, 'vi'));
+  protected readonly districts = signal<unknown[]>([]);
+  protected readonly isLoadingDistricts = signal(false);
+  protected readonly districtsError = signal('');
+
+  protected readonly provinceOptions = computed<ProvinceOption[]>(() => {
+    return this.modalData.provinces
+      .filter((province) => province.province_NAME)
+      .map((province) => ({
+        value: String(province.province_ID),
+        label: province.province_NAME,
+      }))
+      .filter(
+        (province, index, options) =>
+          options.findIndex((item) => item.value === province.value) === index,
+      )
+      .sort((a, b) => a.label.localeCompare(b.label, 'vi'));
+  });
+
+  protected readonly selectedProvinceName = computed(() => {
+    const selectedProvinceId = this.selectedProvince();
+
+    if (!selectedProvinceId) {
+      return '';
+    }
+
+    return (
+      this.modalData.provinces.find((province) => String(province.province_ID) === selectedProvinceId)
+        ?.province_NAME ?? ''
+    );
   });
 
   protected readonly districtOptions = computed(() => {
@@ -47,7 +80,7 @@ export class TransactionPointFilterModalComponent {
   });
 
   protected readonly filteredOffices = computed(() => {
-    const province = this.selectedProvince();
+    const province = this.selectedProvinceName();
     const district = this.selectedDistrict();
     const query = this.searchKeyword().trim().toLowerCase();
 
@@ -64,6 +97,22 @@ export class TransactionPointFilterModalComponent {
       return matchesProvince && matchesDistrict && matchesQuery;
     });
   });
+
+  protected loadDistricts(provinceId: string | number): void {
+    this.isLoadingDistricts.set(true);
+    this.districtsError.set('');
+
+    this.registerService.fetchDistrict(provinceId, 'success').subscribe({
+      next: (response) => {
+        this.districts.set(response.data);
+        this.isLoadingDistricts.set(false);
+      },
+      error: () => {
+        this.districtsError.set('Không gọi được API fetchDistricts');
+        this.isLoadingDistricts.set(false);
+      },
+    });
+  }
 
   protected onProvinceChange(value: string): void {
     this.selectedProvinceSignal.set(value);

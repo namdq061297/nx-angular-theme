@@ -5,8 +5,8 @@
       <select class="field__control" [value]="selectedProvince()"
         (change)="onProvinceChange($any($event.target).value)">
         <option value="">- Chọn Tỉnh/Thành phố -</option>
-        @for (province of provinceOptions(); track province) {
-        <option [value]="province">{{ province }}</option>
+        @for (province of provinceOptions(); track province.value) {
+        <option [value]="province.value">{{ province.label }}</option>
         }
       </select>
     </label>

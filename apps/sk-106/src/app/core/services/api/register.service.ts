@@ -19,7 +19,7 @@ import { formatQueryParams } from '../../../shared/utils.ts/string-util';
 export class RegisterService {
   private readonly api = inject(ApiService);
 
-  getDistrict(
+  fetchDistrict(
     provinceId: number | string,
     mockScenario?: 'success' | 'error',
   ): Observable<FetchDistrictsResponse> {

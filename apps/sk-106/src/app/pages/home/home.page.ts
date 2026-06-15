@@ -106,7 +106,7 @@ export class HomePage {
     this.isLoadingDistricts.set(true);
     this.districtsError.set('');
 
-    this.registerService.getDistrict(467, 'success').subscribe({
+    this.registerService.fetchDistrict(467, 'success').subscribe({
       next: (response) => {
         this.districts.set(response.data);
         this.isLoadingDistricts.set(false);
@@ -122,7 +122,7 @@ export class HomePage {
     this.isLoadingDistricts.set(true);
     this.districtsError.set('');
 
-    this.registerService.getDistrict(467, 'error').subscribe({
+    this.registerService.fetchDistrict(467, 'error').subscribe({
       next: (response) => {
         this.districts.set(response.data);
         this.isLoadingDistricts.set(false);

@@ -12,7 +12,7 @@ import {
 import { TextInputComponent } from '../../../../shared/components/text-input/text-input.component';
 import { ModalService } from '../../../../shared/components/modal/modal.service';
 import 'iconify-icon';
-import type { Office } from '../../../../core/models/register.model';
+import type { Office, Province } from '../../../../core/models/register.model';
 import { TransactionPointFilterModalComponent } from './transaction-point-filter-modal/transaction-point-filter-modal.component';
 
 @Component({
@@ -32,6 +32,7 @@ export class RegisterScheduleStepComponent {
   readonly selectedSlot = input('');
   readonly submitted = input(false);
   readonly offices = input<Office[]>([]);
+  readonly provinces = input<Province[]>([]);
 
   readonly transactionPointChanged = output<Office | null>();
   readonly consultMethodChanged = output<string>();
@@ -132,13 +133,14 @@ export class RegisterScheduleStepComponent {
 
   private async openTransactionPointFilterModal(): Promise<void> {
     const ref = this.modalService.open<
-      { offices: Office[]; selectedTransactionPoint: Office | null },
+      { offices: Office[]; provinces: Province[]; selectedTransactionPoint: Office | null },
       Office
     >({
       title: 'Chọn điểm giao dịch',
       component: TransactionPointFilterModalComponent,
       data: {
         offices: this.offices(),
+        provinces: this.provinces(),
         selectedTransactionPoint: this.selectedTransactionPoint(),
       },
       width: '860px',
