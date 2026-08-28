@@ -15,10 +15,10 @@
     <div class="header-right">
       @if (isAuthenticated()) {
         <div class="header-actions">
-          <a class="requests-link" [routerLink]="['/register/register-list']">
+          <!-- <a class="requests-link" [routerLink]="['/register/register-list']">
             <span>Danh sách yêu cầu</span>
             <span class="request-count">{{ requestCount }}</span>
-          </a>
+          </a> -->
           <p class="body_small_semibold">Kính chào {{ greetingName() }}</p>
 
           <app-button

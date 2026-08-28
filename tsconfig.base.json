@@ -7,8 +7,8 @@
     "module": "preserve",
     "skipLibCheck": true,
     "paths": {
-      "@icons": ["./apps/sk-106/public/assets/icons/index.ts"],
-      "@images": ["./apps/sk-106/public/assets/images/index.ts"]
+      "@icons": ["./apps/my-app/public/assets/icons/index.ts"],
+      "@images": ["./apps/my-app/public/assets/images/index.ts"]
     }
   }
 }

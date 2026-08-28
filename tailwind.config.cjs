@@ -3,7 +3,7 @@ module.exports = {
   content: {
     relative: true,
     files: [
-      './apps/sk-106/src/**/*.{html,ts}',
+      './apps/my-app/src/**/*.{html,ts}',
       './src/**/*.{html,ts}',
       './libs/**/*.{html,ts}',
     ],

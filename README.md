@@ -1,4 +1,4 @@
-# Sk106
+# My App
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.11.
 
@@ -12,7 +12,7 @@ ng serve
 
 ## Mock API
 
-This workspace uses the root `api-docs.json` file as the source of truth for fallback DEV API mocking, while custom responses live under `apps/sk-106/src/app/mock-response`.
+This workspace uses the root `api-docs.json` file as the source of truth for fallback DEV API mocking, while custom responses live under `apps/my-app/src/app/mock-response`.
 
 ### Khi mở app
 
@@ -35,10 +35,10 @@ npm start
 Nếu Swagger/OpenAPI thay đổi, làm theo checklist này:
 
 1. Cập nhật `api-docs.json` trước để đồng bộ contract mới.
-2. Nếu có API mới, thêm file response tương ứng trong `apps/sk-106/src/app/mock-response`.
+2. Nếu có API mới, thêm file response tương ứng trong `apps/my-app/src/app/mock-response`.
 3. Nếu request thay đổi query/body/path/header, cập nhật file response mock và phần gọi API trong app nếu cần.
-4. Nếu response đổi field hoặc structure, cập nhật type/interface trong `apps/sk-106/src/app/core/models` hoặc `apps/sk-106/src/app/mock-response/mock-response.interfaces.ts`.
-5. Nếu cần đổi endpoint đang dùng, cập nhật `apps/sk-106/src/app/core/config/api-endpoints.ts`.
+4. Nếu response đổi field hoặc structure, cập nhật type/interface trong `apps/my-app/src/app/core/models` hoặc `apps/my-app/src/app/mock-response/mock-response.interfaces.ts`.
+5. Nếu cần đổi endpoint đang dùng, cập nhật `apps/my-app/src/app/core/config/api-endpoints.ts`.
 6. Chạy lại:
 
 ```bash

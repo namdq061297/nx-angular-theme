@@ -3,14 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "nx serve sk-106",
-    "mock:api": "nx run sk-106:mock-api",
-    "build": "nx build sk-106",
-    "build:uat": "nx build sk-106 --configuration uat",
-    "build:prod": "nx build sk-106 --configuration production",
-    "watch": "nx build sk-106 --watch --configuration development",
-    "test": "nx test sk-106",
-    "serve:ssr:sk-106": "node dist/sk-106/server/server.mjs"
+    "start": "nx serve my-app",
+    "mock:api": "nx run my-app:mock-api",
+    "build": "nx build my-app",
+    "build:uat": "nx build my-app --configuration uat",
+    "build:prod": "nx build my-app --configuration production",
+    "watch": "nx build my-app --watch --configuration development",
+    "test": "nx test my-app",
+    "serve:ssr:my-app": "node dist/my-app/server/server.mjs"
   },
   "private": true,
   "packageManager": "npm@10.8.2",

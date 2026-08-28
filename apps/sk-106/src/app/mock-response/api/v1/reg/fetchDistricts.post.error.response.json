@@ -1,8 +1,0 @@
-{
-  "statusCode": 500,
-  "body": {
-    "code": -1,
-    "desc": "Không lấy được danh sách quận/huyện",
-    "data": []
-  }
-}
