@@ -59,6 +59,6 @@ export class OtpPage {
   protected onConfirm(): void {
     console.log('OTP confirmed:');
     this.authState.login();
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/', { replaceUrl: true });
   }
 }

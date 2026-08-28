@@ -1,5 +1,5 @@
 <div class="shell">
-  <header class="shell-header" [style.background]="backgroundStyle">
+  <header class="shell-header">
     <div class="header-left">
       <h1 (click)="goHome()" class="brand">
         <app-icon name="ic_logo_full" [height]="50" [width]="130" alt="VCB" />
@@ -15,10 +15,6 @@
     <div class="header-right">
       @if (isAuthenticated()) {
         <div class="header-actions">
-          <!-- <a class="requests-link" [routerLink]="['/register/register-list']">
-            <span>Danh sách yêu cầu</span>
-            <span class="request-count">{{ requestCount }}</span>
-          </a> -->
           <p class="body_small_semibold">Kính chào {{ greetingName() }}</p>
 
           <app-button
@@ -36,7 +32,7 @@
           variant="primary"
           label="Đăng nhập"
           class="logout-btn"
-          (pressed)="logout()"
+          (pressed)="goToLogin()"
         ></app-button>
       }
     </div>
