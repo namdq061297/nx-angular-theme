@@ -53,3 +53,17 @@ export interface InquiryCustomerProfileResponse {
   desc: string;
   data: CustomerProfile;
 }
+
+export interface UpdateProfileRequest {
+  customerID: string;
+  email?: string;
+  phone?: string;
+}
+
+export interface UpdateProfileResponse {
+  code: number;
+  desc: string;
+  data: {
+    success: boolean;
+  };
+}
